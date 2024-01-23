@@ -13,7 +13,6 @@ public class Company {
     private String companyName;
 
     @Column(nullable = false)
-
     private String password;
 
     private int companyPoint;
