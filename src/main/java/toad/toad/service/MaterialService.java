@@ -2,9 +2,14 @@ package toad.toad.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import toad.toad.data.dto.MaterialGetDto;
 import toad.toad.data.dto.MaterialPostDto;
 import toad.toad.data.entity.Material;
 import toad.toad.repository.MaterialRepository;
+
+import java.lang.reflect.Member;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MaterialService {
@@ -25,13 +30,75 @@ public class MaterialService {
         material.setMaterialName(materialPostDto.getMaterialName());
         material.setExpectedCondition(materialPostDto.getExpectedCondition());
         material.setMinimumQuantity(materialPostDto.getMinimumQuantity());
+        material.setProductId(materialPostDto.getProductId());
         material.setPointsPerWeight(materialPostDto.getPointsPerWeight());
         material.setRestrictedArea(materialPostDto.getRestrictedArea());
         material.setAvailableArea(materialPostDto.getAvailableArea());
 
-        materialRepository.save(material);
+        Integer materialId = materialRepository.save(material).getMaterialId();
 
-        return 0;
+        return materialId;
+    }
+
+    public List<MaterialGetDto> findAllMaterials() throws Exception {
+        List<Material> materials = materialRepository.findAll();
+        List<MaterialGetDto> materialGetDtos = new ArrayList<>();
+
+        for (Material material : materials) {
+            MaterialGetDto materialGetDto = new MaterialGetDto();
+
+            materialGetDto.setMaterialId(material.getMaterialId());
+            materialGetDto.setCompanyId(material.getCompanyId());
+            materialGetDto.setMaterialName(material.getMaterialName());
+            materialGetDto.setExpectedCondition(material.getExpectedCondition());
+            materialGetDto.setMinimumQuantity(material.getMinimumQuantity());
+            materialGetDto.setProductId(material.getProductId());
+            materialGetDto.setPointsPerWeight(material.getPointsPerWeight());
+            materialGetDto.setRestrictedArea(material.getRestrictedArea());
+            materialGetDto.setAvailableArea(material.getAvailableArea());
+
+            materialGetDtos.add(materialGetDto);
+        }
+        return materialGetDtos;
+    }
+
+    public List<MaterialGetDto> findByMaterialNameContaining(String keyword) throws Exception {
+        List<Material> materials = materialRepository.findByMaterialNameContaining(keyword);
+        List<MaterialGetDto> materialGetDtos = new ArrayList<>();
+
+        for (Material material : materials) {
+            MaterialGetDto materialGetDto = new MaterialGetDto();
+
+            materialGetDto.setMaterialId(material.getMaterialId());
+            materialGetDto.setCompanyId(material.getCompanyId());
+            materialGetDto.setMaterialName(material.getMaterialName());
+            materialGetDto.setExpectedCondition(material.getExpectedCondition());
+            materialGetDto.setMinimumQuantity(material.getMinimumQuantity());
+            materialGetDto.setProductId(material.getProductId());
+            materialGetDto.setPointsPerWeight(material.getPointsPerWeight());
+            materialGetDto.setRestrictedArea(material.getRestrictedArea());
+            materialGetDto.setAvailableArea(material.getAvailableArea());
+
+            materialGetDtos.add(materialGetDto);
+        }
+        return materialGetDtos;
+    }
+
+    public MaterialGetDto findByMaterialId (Integer id) throws Exception {
+        Material material = materialRepository.findById(id).orElseThrow(() -> new Exception("재료가 존재하지 않습니다."));
+        MaterialGetDto materialGetDto = new MaterialGetDto();
+
+        materialGetDto.setMaterialId(material.getMaterialId());
+        materialGetDto.setCompanyId(material.getCompanyId());
+        materialGetDto.setMaterialName(material.getMaterialName());
+        materialGetDto.setExpectedCondition(material.getExpectedCondition());
+        materialGetDto.setMinimumQuantity(material.getMinimumQuantity());
+        materialGetDto.setProductId(material.getProductId());
+        materialGetDto.setPointsPerWeight(material.getPointsPerWeight());
+        materialGetDto.setRestrictedArea(material.getRestrictedArea());
+        materialGetDto.setAvailableArea(material.getAvailableArea());
+
+        return materialGetDto;
     }
 
 }

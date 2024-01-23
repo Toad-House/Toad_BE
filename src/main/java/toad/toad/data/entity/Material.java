@@ -16,7 +16,7 @@ public class Material {
     private Integer materialId;
 
     @Column(nullable = false)
-    private int companyId;
+    private Integer companyId;
 
     @Column(nullable = false)
     private String materialName;
