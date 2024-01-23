@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    int saveProduct(ProductDetailDto productDetailDto);
+    int saveProduct(ProductDetailDto productDetailDto) throws Exception;
 
     List<ProductSimpleDto> getAllProducts();
 

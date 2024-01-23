@@ -10,7 +10,6 @@ import toad.toad.repository.ProductRepository;
 import toad.toad.service.ProductService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -24,16 +23,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int saveProduct(ProductDetailDto productDetailDto) {
+    public int saveProduct(ProductDetailDto productDetailDto) throws Exception {
 
-        Optional<Company> company = companyRepository.findByCompanyName(productDetailDto.getCompanyName());
+        Company company = companyRepository.findByCompanyName(productDetailDto.getCompanyName())
+                                        .orElseThrow(() -> new Exception("company not found"));
 
         Product newProduct = Product.builder()
                 .productName(productDetailDto.getProductName())
                 .productPrice(productDetailDto.getProductPrice())
                 .productDesc(productDetailDto.getProductDesc())
                 .imageUrl(productDetailDto.getImageUrls().getBytes())
-                .company(company.get())
+                .company(company)
                 .build();
         productRepository.save(newProduct);
 
