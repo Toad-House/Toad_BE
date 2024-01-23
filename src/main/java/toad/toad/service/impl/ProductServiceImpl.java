@@ -1,7 +1,5 @@
 package toad.toad.service.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import toad.toad.domain.Company;
 import toad.toad.domain.Product;
@@ -11,7 +9,6 @@ import toad.toad.repository.CompanyRepository;
 import toad.toad.repository.ProductRepository;
 import toad.toad.service.ProductService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
