@@ -1,13 +1,13 @@
 ---
 name: " ✅ Todo template"
 about: Describe this issue template's purpose here.
-title: ''
+title: "[TODO]"
 labels: ''
 assignees: ''
 
 ---
 
-##  ✅ Task
+##  ✅ Task
 - [ ] 할 일 1
 - [ ] 할 일 2
 
