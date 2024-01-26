@@ -48,12 +48,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductSimpleDto> getAllProducts() {
         return productRepository.findAll().stream()
-                .map(product -> modelMapper.map(product, ProductSimpleDto.class)).collect(Collectors.toList());
+                .map(product -> modelMapper.map(product, ProductSimpleDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductSimpleDto> findProductsByKeywords() {
-        return null;
+    public List<ProductSimpleDto> findProductsByKeywords(String keyword) {
+        List<Product> targetProducts = productRepository.findByProductNameContainingIgnoreCaseOrProductDescContainingIgnoreCase(keyword);
+        return targetProducts.stream()
+                .map(product -> modelMapper.map(product, ProductSimpleDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
