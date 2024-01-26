@@ -11,7 +11,7 @@ public interface ProductService {
 
     List<ProductSimpleDto> getAllProducts();
 
-    List<ProductSimpleDto> findProductsByKeywords();
+    List<ProductSimpleDto> findProductsByKeywords(String keyword);
 
     List<ProductDetailDto> getProductDetail();
 

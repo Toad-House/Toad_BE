@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import toad.toad.data.dto.ProductSimpleDto;
 import toad.toad.service.ProductService;
@@ -28,6 +29,12 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductSimpleDto>> getAllProducts() {
         List<ProductSimpleDto> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductSimpleDto>> searchProducts(@RequestParam String keyword) {
+        List<ProductSimpleDto> products = productService.findProductsByKeywords(keyword);
         return ResponseEntity.ok(products);
     }
 }
