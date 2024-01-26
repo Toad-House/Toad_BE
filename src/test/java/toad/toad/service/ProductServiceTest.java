@@ -39,25 +39,29 @@ public class ProductServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void getAllProducts() {
+    private Company createCompany() {
         Company company = new Company();
         company.setCompanyId(0);
         company.setCompanyName("SolidIT");
         company.setPassword("0000");
+        return company;
+    }
 
-        // 가짜 Product 엔티티 리스트 생성
-        Product product1 = new Product();
-        product1.setProductId(1);
-        product1.setProductName("Product 1");
-        product1.setProductPrice(50.0);
-        product1.setCompany(company);
+    private Product createProduct(int productId, String productName, double productPrice, Company company) {
+        Product product = new Product();
+        product.setProductId(productId);
+        product.setProductName(productName);
+        product.setProductPrice(productPrice);
+        product.setCompany(company);
+        return product;
+    }
 
-        Product product2 = new Product();
-        product2.setProductId(2);
-        product2.setProductName("Product 2");
-        product2.setProductPrice(30.0);
-        product2.setCompany(company);
+    @Test
+    void getAllProducts() {
+        Company company = createCompany();
+
+        Product product1 = createProduct(1, "Product 1", 50.0, company);
+        Product product2 = createProduct(2, "Product 2", 30.0, company);
 
         List<Product> fakeProductList = Arrays.asList(product1, product2);
 
@@ -90,4 +94,41 @@ public class ProductServiceTest {
         assertEquals("Product 2", result.get(1).getProductName());
         assertEquals(30.0, result.get(1).getProductPrice());
     }
+
+    @Test
+    void searchProductByKeyword() {
+        String keyword = "Product";
+
+        Company company = createCompany();
+
+        Product product1 = createProduct(1, "Product 1", 50.0, company);
+        Product product2 = createProduct(2, "Product 2", 30.0, company);
+
+        List<Product> fakeProductList = Arrays.asList(product1, product2);
+
+        // ModelMapper에 대한 행동 설정
+        when(modelMapper.map(product1, ProductSimpleDto.class)).thenReturn(
+                new ProductSimpleDto(1, "Product 1", 50.0, "", 0, "SolidIT")
+        );
+        when(modelMapper.map(product2, ProductSimpleDto.class)).thenReturn(
+                new ProductSimpleDto(2, "Product 2", 30.0, "", 0, "SolidIT")
+        );
+
+        // ProductRepository에 대한 행동 설정
+        when(productRepository.findByProductNameContainingIgnoreCaseOrProductDescContainingIgnoreCase(keyword)).thenReturn(fakeProductList);
+
+        // 테스트 수행
+        List<ProductSimpleDto> result = productService.findProductsByKeywords(keyword);
+
+        // 결과 검증
+        assertEquals(2, result.size());
+        assertEquals(1, result.get(0).getProductId());
+        assertEquals("Product 1", result.get(0).getProductName());
+        assertEquals(50.0, result.get(0).getProductPrice());
+        assertEquals("SolidIT", result.get(0).getCompanyName());
+        assertEquals(2, result.get(1).getProductId());
+        assertEquals("Product 2", result.get(1).getProductName());
+        assertEquals(30.0, result.get(1).getProductPrice());
+    }
+
 }
