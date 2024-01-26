@@ -32,7 +32,7 @@ public class CompanyPointUsage {
     @PrePersist
     public void checkUserIdWhenPay() {
         if (chargeOrPay && user == null) {
-            throw new IllegalStateException("User not specified for whom the points were paid");
+            throw new IllegalStateException("User not specified for whom the points were paid.");
         }
     }
 }

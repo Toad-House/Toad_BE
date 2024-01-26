@@ -28,4 +28,11 @@ public class UserPointUsage {
 
     @Column(nullable = false)
     private int point;  // 받거나 사용한 포인트량
+
+    @PrePersist
+    public void checkUserIdWhenPay() {
+        if (!receiveOrUse && company == null) {
+            throw new IllegalStateException("Company not specified from whom the points were received.");
+        }
+    }
 }
