@@ -1,18 +1,16 @@
 package toad.toad.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import toad.toad.data.dto.ProductSimpleDto;
 import toad.toad.service.ProductService;
 
 import java.util.List;
 
-@Tag(name = "Product Controller", description = "상품 관련 API")
 @RestController
 @RequestMapping("/product")
 public class ProductController {
@@ -28,6 +26,12 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductSimpleDto>> getAllProducts() {
         List<ProductSimpleDto> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductSimpleDto>> searchProducts(@RequestParam String keyword) {
+        List<ProductSimpleDto> products = productService.findProductsByKeywords(keyword);
         return ResponseEntity.ok(products);
     }
 }
