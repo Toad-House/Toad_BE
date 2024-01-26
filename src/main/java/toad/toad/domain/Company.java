@@ -1,7 +1,13 @@
 package toad.toad.domain;
 
 import jakarta.persistence.*;
+import lombok.*;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 public class Company {
 
@@ -15,5 +21,6 @@ public class Company {
     @Column(nullable = false)
     private String password;
 
-    private int companyPoint;
+    @Builder.Default
+    private int companyPoint = 0;
 }
