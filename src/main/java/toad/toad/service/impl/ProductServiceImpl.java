@@ -1,5 +1,6 @@
 package toad.toad.service.impl;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import toad.toad.data.entity.Company;
 import toad.toad.data.entity.Product;
@@ -9,17 +10,21 @@ import toad.toad.repository.CompanyRepository;
 import toad.toad.repository.ProductRepository;
 import toad.toad.service.ProductService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CompanyRepository companyRepository;
+    private final ModelMapper modelMapper;
 
-    public ProductServiceImpl(ProductRepository productRepository, CompanyRepository companyRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, CompanyRepository companyRepository, ModelMapper modelMapper) {
         this.productRepository = productRepository;
         this.companyRepository = companyRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -42,7 +47,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductSimpleDto> getAllProducts() {
-        return null;
+        return productRepository.findAll().stream()
+                .map(product -> modelMapper.map(product, ProductSimpleDto.class)).collect(Collectors.toList());
     }
 
     @Override
