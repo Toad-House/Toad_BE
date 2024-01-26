@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-public class UserPointUsage {
+public class UserPointUsage extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

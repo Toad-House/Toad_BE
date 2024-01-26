@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-public class CompanyPointUsage {
+public class CompanyPointUsage extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +35,5 @@ public class CompanyPointUsage {
             throw new IllegalStateException("User not specified for whom the points were paid.");
         }
     }
+
 }
