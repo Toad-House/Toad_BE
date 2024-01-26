@@ -13,5 +13,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     List<Product> findByProductDescContaining(String keyword);
 
-    List<Product> findByCompany_CompanyId(int companyId);
+//    List<Product> findByCompany_CompanyId(int companyId);
 }
