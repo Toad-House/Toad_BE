@@ -1,4 +1,4 @@
-package toad.toad.dto;
+package toad.toad.data.dto;
 
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
 package toad.toad.service;
 
-import toad.toad.dto.ProductDetailDto;
-import toad.toad.dto.ProductSimpleDto;
+import toad.toad.data.dto.ProductDetailDto;
+import toad.toad.data.dto.ProductSimpleDto;
 
 import java.util.List;
 

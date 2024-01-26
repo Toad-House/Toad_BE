@@ -1,7 +1,8 @@
-package toad.toad.domain;
+package toad.toad.data.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +29,7 @@ public class Order {
     @Column(nullable = false)
     private int orderNum;
 
+    @CreatedDate
     @Column(nullable = false)
     private LocalDateTime orderedAt;
 

@@ -1,4 +1,4 @@
-package toad.toad.domain;
+package toad.toad.data.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

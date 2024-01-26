@@ -1,4 +1,4 @@
-package toad.toad.domain;
+package toad.toad.data.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,4 +28,11 @@ public class CompanyPointUsage {
 
     @Column(nullable = false)
     private int point;  // 충전하거나 사용한 포인트량
+
+    @PrePersist
+    public void checkUserIdWhenPay() {
+        if (chargeOrPay && user == null) {
+            throw new IllegalStateException("User not specified for whom the points were paid");
+        }
+    }
 }

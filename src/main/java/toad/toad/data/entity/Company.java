@@ -1,4 +1,4 @@
-package toad.toad.domain;
+package toad.toad.data.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,21 +9,18 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-public class User {
+public class Company {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    private int companyId;
 
     @Column(nullable = false)
-    private String userName;
+    private String companyName;
 
     @Column(nullable = false)
     private String password;
 
     @Builder.Default
-    private int userPoint = 0;
-
-    @Column(nullable = false)
-    private String userContact;
+    private int companyPoint = 0;
 }

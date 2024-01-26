@@ -1,10 +1,10 @@
 package toad.toad.service.impl;
 
 import org.springframework.stereotype.Service;
-import toad.toad.domain.Company;
-import toad.toad.domain.Product;
-import toad.toad.dto.ProductDetailDto;
-import toad.toad.dto.ProductSimpleDto;
+import toad.toad.data.entity.Company;
+import toad.toad.data.entity.Product;
+import toad.toad.data.dto.ProductDetailDto;
+import toad.toad.data.dto.ProductSimpleDto;
 import toad.toad.repository.CompanyRepository;
 import toad.toad.repository.ProductRepository;
 import toad.toad.service.ProductService;

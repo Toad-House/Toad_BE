@@ -1,7 +1,7 @@
 package toad.toad.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import toad.toad.domain.Company;
+import toad.toad.data.entity.Company;
 
 import java.util.Optional;
 
