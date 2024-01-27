@@ -1,9 +1,13 @@
 package toad.toad.data.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductDetailDto {
     private int productId;
     private String productName;
