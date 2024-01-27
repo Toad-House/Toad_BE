@@ -16,7 +16,7 @@ public interface ProductService {
 
     Optional<ProductDetailDto> getProductDetail(int id);
 
-    int updateProduct(ProductDetailDto productDetailDto, int productId) throws Exception;
+    int updateProduct(int productId, ProductDetailDto productDetailDto) throws Exception;
 
     void deleteProduct(int productId);
 
