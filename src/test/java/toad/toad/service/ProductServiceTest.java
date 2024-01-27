@@ -18,8 +18,10 @@ import toad.toad.service.impl.ProductServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class ProductServiceTest {
@@ -42,8 +44,8 @@ public class ProductServiceTest {
 
     private Company createCompany() {
         Company company = new Company();
-        company.setCompanyId(0);
-        company.setCompanyName("SolidIT");
+        company.setCompanyId(1);
+        company.setCompanyName("Test Company");
         company.setPassword("0000");
         return company;
     }
@@ -56,6 +58,18 @@ public class ProductServiceTest {
         product.setCompany(company);
         return product;
     }
+
+    private Product createDetailProduct(int productId, String productName, double productPrice, String productDesc, String imageUrl, Company company) {
+        Product product = new Product();
+        product.setProductId(productId);
+        product.setProductName(productName);
+        product.setProductPrice(productPrice);
+        product.setProductDesc(productDesc);
+        product.setImageUrl(imageUrl.getBytes());
+        product.setCompany(company);
+        return product;
+    }
+
 
     @Test
     void saveProduct() throws Exception {
@@ -108,10 +122,10 @@ public class ProductServiceTest {
 
         // ModelMapper에 대한 행동 설정
         when(modelMapper.map(product1, ProductSimpleDto.class)).thenReturn(
-                new ProductSimpleDto(1, "Product 1", 50.0, "", 0, "SolidIT")
+                new ProductSimpleDto(1, "Product 1", 50.0, "", 1, "SolidIT")
         );
         when(modelMapper.map(product2, ProductSimpleDto.class)).thenReturn(
-                new ProductSimpleDto(2, "Product 2", 30.0, "", 0, "SolidIT")
+                new ProductSimpleDto(2, "Product 2", 30.0, "", 1, "SolidIT")
         );
 
         // ProductRepository에 대한 행동 설정
@@ -144,10 +158,10 @@ public class ProductServiceTest {
 
         // ModelMapper에 대한 행동 설정
         when(modelMapper.map(product1, ProductSimpleDto.class)).thenReturn(
-                new ProductSimpleDto(1, "Product 1", 50.0, "", 0, "SolidIT")
+                new ProductSimpleDto(1, "Product 1", 50.0, "", 1, "Test Company")
         );
         when(modelMapper.map(product2, ProductSimpleDto.class)).thenReturn(
-                new ProductSimpleDto(2, "Product 2", 30.0, "", 0, "SolidIT")
+                new ProductSimpleDto(2, "Product 2", 30.0, "", 1, "Test Company")
         );
 
         // ProductRepository에 대한 행동 설정
@@ -161,10 +175,87 @@ public class ProductServiceTest {
         assertEquals(1, result.get(0).getProductId());
         assertEquals("Product 1", result.get(0).getProductName());
         assertEquals(50.0, result.get(0).getProductPrice());
-        assertEquals("SolidIT", result.get(0).getCompanyName());
+        assertEquals("Test Company", result.get(0).getCompanyName());
         assertEquals(2, result.get(1).getProductId());
         assertEquals("Product 2", result.get(1).getProductName());
         assertEquals(30.0, result.get(1).getProductPrice());
+    }
+
+    @Test
+    void getProductDetail() {
+        int productId = 1;
+
+        Company company = createCompany();
+
+        Product product = createDetailProduct(1, "Product 1", 50.0, "Description", "image_url", company);
+
+        // ModelMapper에 대한 행동 설정
+        when(modelMapper.map(product, ProductDetailDto.class)).thenReturn(
+                new ProductDetailDto(1, "Product 1", 50.0, "Description", "image_url", 1, "Test Company")
+        );
+
+        // ProductRepository에 대한 행동 설정
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        // 테스트 수행
+        Optional<ProductDetailDto> result = productService.getProductDetail(productId);
+
+        // 결과 검증
+        assertTrue(result.isPresent());
+        assertEquals(1, result.get().getProductId());
+        assertEquals("Product 1", result.get().getProductName());
+        assertEquals(50.0, result.get().getProductPrice());
+        assertEquals("Description", result.get().getProductDesc());
+        assertEquals("image_url", result.get().getImageUrls());
+        assertEquals(1, result.get().getCompanyId());
+        assertEquals("Test Company", result.get().getCompanyName());
+    }
+
+    @Test
+    void updateProduct() throws Exception {
+        int productId = 1;
+
+        // 가짜 데이터 생성
+        ProductDetailDto updatedProductDetailDto = new ProductDetailDto();
+        updatedProductDetailDto.setProductName("Updated Product");
+        updatedProductDetailDto.setProductPrice(150.0);
+        updatedProductDetailDto.setProductDesc("Updated Description");
+        updatedProductDetailDto.setImageUrls("updated_image_url");
+        updatedProductDetailDto.setCompanyId(1);
+        updatedProductDetailDto.setCompanyName("Updated Company");
+
+        Company fakeCompany = new Company();
+        fakeCompany.setCompanyId(1);
+        fakeCompany.setCompanyName("Updated Company");
+
+        Product fakeProduct = new Product();
+        fakeProduct.setProductId(1);
+        fakeProduct.setProductName("Updated Product");
+        fakeProduct.setProductPrice(150.0);
+        fakeProduct.setProductDesc("Updated Description");
+        fakeProduct.setImageUrl("updated_image_url".getBytes());
+        fakeProduct.setCompany(fakeCompany);
+        System.out.println("Company ID: " + fakeProduct.getCompany().getCompanyId());
+
+        // ModelMapper 행동 설정
+        when(modelMapper.map(updatedProductDetailDto, Product.class)).thenReturn(fakeProduct);
+
+        // ProductService의 updateProduct 호출
+        productService.updateProduct(productId, updatedProductDetailDto);
+
+        // 행동 검증
+        verify(productRepository, times(1)).save(fakeProduct);
+    }
+
+    @Test
+    void deleteProduct() {
+        int productId = 1;
+
+        // ProductService의 deleteProduct 호출
+        productService.deleteProduct(productId);
+
+        // 행동 검증
+        verify(productRepository, times(1)).deleteById(productId);
     }
 
 }

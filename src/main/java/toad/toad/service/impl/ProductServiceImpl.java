@@ -30,8 +30,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public int saveProduct(ProductDetailDto productDetailDto) throws Exception {
 
-        Company company = companyRepository.findByCompanyName(productDetailDto.getCompanyName())
-                                        .orElseThrow(() -> new Exception("company not found"));
+//        Company company = companyRepository.findById(productDetailDto.getCompanyId())
+//                                        .orElseThrow(() -> new Exception("company not found"));
 
         Product newProduct = modelMapper.map(productDetailDto, Product.class);
         productRepository.save(newProduct);
@@ -56,12 +56,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Optional<ProductDetailDto> getProductDetail(int id) {
-        Optional<Product> product = productRepository.findById(id);
-        return product.map(product1 -> modelMapper.map(product, ProductDetailDto.class));
+        Optional<Product> tarGetProduct = productRepository.findById(id);
+        return tarGetProduct.map(product -> modelMapper.map(product, ProductDetailDto.class));
     }
 
     @Override
-    public int updateProduct(ProductDetailDto productDetailDto, int productId) throws Exception {
+    public int updateProduct(int productId, ProductDetailDto productDetailDto) throws Exception {
         Optional<Product> productOptional = productRepository.findById(productId);
 
         if (productOptional.isPresent()) {
