@@ -7,7 +7,7 @@ public class SalesDetailDto {
     private String companyName;
     private int orderId;
     private int userId;
-    private int userName;
+    private String userName;
     private int productId;
     private String productName;
     private int productPrice;
