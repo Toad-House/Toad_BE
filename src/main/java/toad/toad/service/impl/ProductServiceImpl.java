@@ -57,8 +57,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Optional<ProductDetailDto> getProductDetail(int id) {
-        Optional<Product> tarGetProduct = productRepository.findById(id);
-        return tarGetProduct.map(product -> modelMapper.map(product, ProductDetailDto.class));
+        Optional<Product> productOptional = productRepository.findById(id);
+        return productOptional.map(product -> modelMapper.map(product, ProductDetailDto.class));
     }
 
     @Override
