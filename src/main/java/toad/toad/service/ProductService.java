@@ -4,6 +4,7 @@ import toad.toad.data.dto.ProductDetailDto;
 import toad.toad.data.dto.ProductSimpleDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductService {
 
@@ -13,10 +14,10 @@ public interface ProductService {
 
     List<ProductSimpleDto> findProductsByKeywords(String keyword);
 
-    List<ProductDetailDto> getProductDetail();
+    Optional<ProductDetailDto> getProductDetail(int id);
 
-    int updateProduct(ProductDetailDto productDetailDto, int id);
+    int updateProduct(ProductDetailDto productDetailDto, int productId) throws Exception;
 
-    int deleteProduct(int id);
+    void deleteProduct(int productId);
 
 }
