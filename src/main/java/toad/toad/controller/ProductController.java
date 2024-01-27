@@ -1,15 +1,15 @@
 package toad.toad.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import toad.toad.data.dto.ProductDetailDto;
 import toad.toad.data.dto.ProductSimpleDto;
 import toad.toad.service.ProductService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
@@ -33,5 +33,12 @@ public class ProductController {
     public ResponseEntity<List<ProductSimpleDto>> searchProducts(@RequestParam String keyword) {
         List<ProductSimpleDto> products = productService.findProductsByKeywords(keyword);
         return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<?> getProductDetail(@PathVariable int productId) {
+        Optional<ProductDetailDto> productDetailOptional = productService.getProductDetail(productId);
+        return productDetailOptional.map((ResponseEntity::ok))
+                .orElse(ResponseEntity.notFound().build());
     }
 }
