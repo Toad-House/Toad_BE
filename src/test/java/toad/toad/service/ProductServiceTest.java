@@ -6,8 +6,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import toad.toad.data.dto.ProductDetailDto;
 import toad.toad.data.dto.ProductSimpleDto;
 import toad.toad.data.entity.Company;
@@ -20,8 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class ProductServiceTest {
@@ -94,7 +91,6 @@ public class ProductServiceTest {
         fakeProduct.setImageUrl("test_image_url".getBytes());
         fakeProduct.setCompany(fakeCompany);
         System.out.println("Company ID: " + fakeProduct.getCompany().getCompanyId());
-
 
         // ModelMapper 행동 설정
         when(modelMapper.map(productDetailDto, Product.class)).thenReturn(fakeProduct);
@@ -215,36 +211,39 @@ public class ProductServiceTest {
     void updateProduct() throws Exception {
         int productId = 1;
 
-        // 가짜 데이터 생성
+        Company company = createCompany();
+        companyRepository.save(company);
+
+        // 가짜 데이터 생성 후 저장
+        ProductDetailDto productDetailDto = new ProductDetailDto();
+        productDetailDto.setProductName("Test Product");
+        productDetailDto.setProductPrice(100.0);
+        productDetailDto.setProductDesc("Test Description");
+        productDetailDto.setImageUrls("test_image_url");
+        productDetailDto.setCompanyId(company.getCompanyId());
+        productDetailDto.setCompanyName(company.getCompanyName());
+        productService.saveProduct(productDetailDto);
+
+        // 가짜 수정 데이터 생성
         ProductDetailDto updatedProductDetailDto = new ProductDetailDto();
         updatedProductDetailDto.setProductName("Updated Product");
         updatedProductDetailDto.setProductPrice(150.0);
         updatedProductDetailDto.setProductDesc("Updated Description");
         updatedProductDetailDto.setImageUrls("updated_image_url");
         updatedProductDetailDto.setCompanyId(1);
-        updatedProductDetailDto.setCompanyName("Updated Company");
-
-        Company fakeCompany = new Company();
-        fakeCompany.setCompanyId(1);
-        fakeCompany.setCompanyName("Updated Company");
-
-        Product fakeProduct = new Product();
-        fakeProduct.setProductId(1);
-        fakeProduct.setProductName("Updated Product");
-        fakeProduct.setProductPrice(150.0);
-        fakeProduct.setProductDesc("Updated Description");
-        fakeProduct.setImageUrl("updated_image_url".getBytes());
-        fakeProduct.setCompany(fakeCompany);
-        System.out.println("Company ID: " + fakeProduct.getCompany().getCompanyId());
-
-        // ModelMapper 행동 설정
-        when(modelMapper.map(updatedProductDetailDto, Product.class)).thenReturn(fakeProduct);
+        updatedProductDetailDto.setCompanyName("Test Company");
 
         // ProductService의 updateProduct 호출
         productService.updateProduct(productId, updatedProductDetailDto);
 
         // 행동 검증
-        verify(productRepository, times(1)).save(fakeProduct);
+        Product updatedProduct = productRepository.findById(productId).orElse(null);
+        assertNotNull(updatedProduct);
+        assertEquals("Updated Product", updatedProduct.getProductName());
+        assertEquals(150.0, updatedProduct.getProductPrice());
+        assertEquals("Updated Description", updatedProduct.getProductDesc());
+        assertEquals("updated_image_url", new String(updatedProduct.getImageUrl()));
+        assertEquals("Test Company", updatedProduct.getCompany().getCompanyName());
     }
 
     @Test

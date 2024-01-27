@@ -34,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
 //                                        .orElseThrow(() -> new Exception("company not found"));
 
         Product newProduct = modelMapper.map(productDetailDto, Product.class);
+//        newProduct.setCompany(company);
         productRepository.save(newProduct);
 
         return newProduct.getProductId();
