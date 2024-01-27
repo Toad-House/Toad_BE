@@ -1,10 +1,6 @@
 package toad.toad.data.dto;
 
-import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import toad.toad.data.entity.Product;
-import toad.toad.data.entity.User;
 
 import java.time.LocalDateTime;
 
@@ -20,5 +16,5 @@ public class OrderGetDto {
     private int companyId;
     private String companyName;
     private int orderNum;
-    private LocalDateTime orderedAt;
+    private LocalDateTime createdTime;
 }
