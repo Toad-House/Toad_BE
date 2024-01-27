@@ -39,7 +39,7 @@ public class OrderController {
         return ResponseEntity.ok(allMyOrders);
     }
 
-    @Operation(summary = "상품 주문하기", description = "상품을 주문하는 api 입니다.")
+    @Operation(summary = "개별 주문 조회하기", description = "개별 주문 정보를 조회하는 api 입니다.")
     @GetMapping("/{orderId}")
     public ResponseEntity<Optional<OrderGetDto>> getOneMyOrder(@PathVariable int orderId, @RequestBody UserInfoDto userInfoDto) {
         Optional<OrderGetDto> targetOrder = orderService.getOneOrder(orderId);
