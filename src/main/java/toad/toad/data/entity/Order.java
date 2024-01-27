@@ -30,8 +30,4 @@ public class Order extends BaseTimeEntity {
     @Column(nullable = false)
     private int orderNum;
 
-    @CreatedDate
-    @Column(nullable = false)
-    private LocalDateTime orderedAt;
-
 }
