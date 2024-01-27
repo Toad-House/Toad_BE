@@ -53,4 +53,21 @@ public class ProductController {
         return productDetailOptional.map((ResponseEntity::ok))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    // UPDATE
+    @Operation(summary = "상품 상세정보 수정", description = "특정 상품의 상세 정보를 수정하는 api 입니다.")
+    @PutMapping("/{productId}")
+    public ResponseEntity<Integer> updateProduct(@PathVariable int productId, @RequestBody ProductDetailDto productDetailDto) throws Exception {
+        int updatedProductId = productService.updateProduct(productId, productDetailDto);
+        return ResponseEntity.ok(updatedProductId);
+    }
+
+    // DELETE
+    @Operation(summary = "상품 삭제", description = "상품을 삭제하는 api 입니다.")
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable int productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.ok().build();
+    }
+
 }
