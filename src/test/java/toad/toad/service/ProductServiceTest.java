@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import toad.toad.data.dto.ProductDetailDto;
 import toad.toad.data.dto.ProductSimpleDto;
 import toad.toad.data.entity.Company;
 import toad.toad.data.entity.Product;
@@ -19,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ProductServiceTest {
     @Mock
@@ -54,6 +55,41 @@ public class ProductServiceTest {
         product.setProductPrice(productPrice);
         product.setCompany(company);
         return product;
+    }
+
+    @Test
+    void saveProduct() throws Exception {
+        // 가짜 데이터 생성
+        ProductDetailDto productDetailDto = new ProductDetailDto();
+        productDetailDto.setProductName("Test Product");
+        productDetailDto.setProductPrice(100.0);
+        productDetailDto.setProductDesc("Test Description");
+        productDetailDto.setImageUrls("test_image_url");
+        productDetailDto.setCompanyId(1);
+        productDetailDto.setCompanyName("Test Company");
+
+        Company fakeCompany = new Company();
+        fakeCompany.setCompanyId(1);
+        fakeCompany.setCompanyName("Test Company");
+
+        Product fakeProduct = new Product();
+        fakeProduct.setProductId(1);
+        fakeProduct.setProductName("Test Product");
+        fakeProduct.setProductPrice(100.0);
+        fakeProduct.setProductDesc("Test Description");
+        fakeProduct.setImageUrl("test_image_url".getBytes());
+        fakeProduct.setCompany(fakeCompany);
+        System.out.println("Company ID: " + fakeProduct.getCompany().getCompanyId());
+
+
+        // ModelMapper 행동 설정
+        when(modelMapper.map(productDetailDto, Product.class)).thenReturn(fakeProduct);
+
+        // ProductService의 saveProduct 호출
+        productService.saveProduct(productDetailDto);
+
+        // 행동 검증
+        verify(productRepository, times(1)).save(fakeProduct);
     }
 
     @Test
