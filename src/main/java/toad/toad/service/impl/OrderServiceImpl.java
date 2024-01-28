@@ -21,14 +21,12 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     private final UserRepository userRepository;
-    private final CompanyRepository companyRepository;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final ModelMapper modelMapper;
 
-    public OrderServiceImpl(UserRepository userRepository, CompanyRepository companyRepository, ProductRepository productRepository, OrderRepository orderRepository, ModelMapper modelMapper) {
+    public OrderServiceImpl(UserRepository userRepository, ProductRepository productRepository, OrderRepository orderRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
-        this.companyRepository = companyRepository;
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.modelMapper = modelMapper;
