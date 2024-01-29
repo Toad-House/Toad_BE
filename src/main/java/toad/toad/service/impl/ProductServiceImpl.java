@@ -49,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductSimpleDto> findProductsByKeywords(String keyword) {
-        List<Product> targetProducts = productRepository.findByProductNameContainingIgnoreCaseOrProductDescContainingIgnoreCase(keyword);
+        List<Product> targetProducts = productRepository.findByProductNameContainingIgnoreCaseOrProductDescContainingIgnoreCase(keyword, keyword);
         return targetProducts.stream()
                 .map(product -> modelMapper.map(product, ProductSimpleDto.class))
                 .collect(Collectors.toList());
