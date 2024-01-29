@@ -161,7 +161,7 @@ public class ProductServiceTest {
         );
 
         // ProductRepository에 대한 행동 설정
-        when(productRepository.findByProductNameContainingIgnoreCaseOrProductDescContainingIgnoreCase(keyword)).thenReturn(fakeProductList);
+        when(productRepository.findByProductNameContainingIgnoreCaseOrProductDescContainingIgnoreCase(keyword, keyword)).thenReturn(fakeProductList);
 
         // 테스트 수행
         List<ProductSimpleDto> result = productService.findProductsByKeywords(keyword);
