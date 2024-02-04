@@ -4,20 +4,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import toad.toad.data.dto.MaterialGetDto;
 import toad.toad.data.dto.MaterialPostDto;
+import toad.toad.data.dto.MaterialRequestPostDto;
 import toad.toad.data.entity.Material;
+import toad.toad.data.entity.MaterialRequest;
 import toad.toad.repository.MaterialRepository;
 
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class MaterialService {
     private final MaterialRepository materialRepository;
+    private final MaterialRequestRepository materialRequestRepository;
 
     @Autowired
-    public MaterialService(MaterialRepository materialRepository) {
+    public MaterialService(MaterialRepository materialRepository, MaterialRequestRepository materialRequestRepository) {
         this.materialRepository = materialRepository;
+        this.materialRequestRepository = materialRequestRepository;
     }
 
     public Integer saveMaterial(MaterialPostDto materialPostDto) throws Exception {
@@ -101,4 +104,17 @@ public class MaterialService {
         return materialGetDto;
     }
 
+    public Integer saveMaterialRequest(MaterialRequestPostDto materialRequestPostDto) throws Exception {
+        MaterialRequest materialRequest = new MaterialRequest();
+
+        materialRequest.setMaterialId(materialRequestPostDto.getMaterialId());
+        materialRequest.setUserId(materialRequestPostDto.getUserId());
+        materialRequest.setQuantityOfMaterial(materialRequestPostDto.getQuantityOfMaterial());
+        materialRequest.setCollectionArea(materialRequestPostDto.getCollectionArea());
+        materialRequest.setCollectionState("applied");
+
+        Integer requestId = materialRequestRepository.save(materialRequest).getRequestId();
+
+        return requestId;
+    }
 }

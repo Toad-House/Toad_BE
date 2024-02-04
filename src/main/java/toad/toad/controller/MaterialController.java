@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import toad.toad.data.dto.MaterialGetDto;
 import toad.toad.data.dto.MaterialPostDto;
+import toad.toad.data.dto.MaterialRequestPostDto;
 import toad.toad.service.MaterialService;
 
 import java.util.List;
@@ -46,8 +47,15 @@ public class MaterialController {
 
     @Operation(summary = "재료 상세 페이지", description = "한 재료의 상세 페이지를 위한 api 입니다.")
     @GetMapping("/detail/{materialId}")
-    public ResponseEntity<MaterialGetDto> MaterialDetail (@PathVariable(name="materialId") Integer materialId) throws Exception {
+    public ResponseEntity<MaterialGetDto> showMaterialDetail (@PathVariable(name="materialId") Integer materialId) throws Exception {
         MaterialGetDto materialGetDto = materialService.findByMaterialId(materialId);
         return ResponseEntity.status(HttpStatus.OK).body(materialGetDto);
+    }
+
+    @Operation(summary = "재료 요청 api", description = "유저가 회사에 재료 제공 요청을 할 때 사용하는 api입니다.")
+    @PostMapping("/request")
+    public ResponseEntity<Integer> createMaterialRequest (@RequestBody MaterialRequestPostDto materialRequestPostDto) throws Exception {
+        Integer requestId = materialService.saveMaterialRequest(materialRequestPostDto);
+        return ResponseEntity.status(HttpStatus.OK).body(requestId);
     }
 }
