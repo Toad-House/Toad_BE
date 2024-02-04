@@ -8,6 +8,7 @@ import toad.toad.data.dto.MaterialRequestPostDto;
 import toad.toad.data.entity.Material;
 import toad.toad.data.entity.MaterialRequest;
 import toad.toad.repository.MaterialRepository;
+import toad.toad.repository.MaterialRequestRepository;
 
 import java.util.ArrayList;
 import java.util.List;
