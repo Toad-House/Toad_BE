@@ -1,0 +1,31 @@
+package toad.toad.data.dto;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+
+@Data
+@NoArgsConstructor
+public class RequestGetConsumerDto {
+    @NonNull
+    private String materialName;
+    private String expectedCondition;
+    @NonNull
+    private String productName;
+    @NonNull
+    private Integer pointsPerWeight;
+    private Integer minimumQuantity;
+    private String restrictedArea;
+    private String availableArea;
+
+    private Integer quantityOfMaterial;
+    private String collectionArea;
+    private String collectionState;
+    private String expectedDate;
+    private String expectedTime;
+    private Integer points;
+    private String cancelReason;
+
+    private String companyName;
+    private String companyContact;
+}

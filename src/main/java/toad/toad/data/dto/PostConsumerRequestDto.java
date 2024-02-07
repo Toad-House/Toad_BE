@@ -6,7 +6,7 @@ import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
-public class PostCancelRequestDto {
+public class PostConsumerRequestDto {
     @NonNull
     private Integer requestId;
 

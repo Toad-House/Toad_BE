@@ -116,97 +116,102 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
     }
 
     @Override
-    public Integer saveApproveRequest (PostApproveRequestDto postApproveRequestDto) {
+    public void saveRequest (PostRequestDto postRequestDto) {
+        if ("approved".equals(postRequestDto.getCollectionState())) {
+            saveApproveRequest(postRequestDto.getRequestId(), postRequestDto.getExpectedDate(), postRequestDto.getExpectedTime());
+        }
+        else if ("completed".equals(postRequestDto.getCollectionState())) {
+            saveCompleteRequest(postRequestDto.getRequestId(), postRequestDto.getPoints());
+        }
+        else if ("canceled".equals(postRequestDto.getCollectionState())) {
+            saveCancelRequest(postRequestDto.getRequestId(), postRequestDto.getCancelReason());
+        }
+
+    }
+    @Override
+    public void saveApproveRequest (Integer requestId, String ExpectedDate, String ExpectedTime) {
         ApprovedMaterialRequest approvedMaterialRequest = new ApprovedMaterialRequest();
 
-        approvedMaterialRequest.setRequestId(postApproveRequestDto.getRequestId());
-        approvedMaterialRequest.setExpectedDate(postApproveRequestDto.getExpectedDate());
-        approvedMaterialRequest.setExpectedTime(postApproveRequestDto.getExpectedTime());
+        approvedMaterialRequest.setRequestId(requestId);
+        approvedMaterialRequest.setExpectedDate(ExpectedDate);
+        approvedMaterialRequest.setExpectedTime(ExpectedTime);
 
         approvedMaterialRequestRepository.save(approvedMaterialRequest);
-
-        return approvedMaterialRequest.getApproveId();
     }
 
     @Override
-    public Integer saveCancelRequest (PostCancelRequestDto postCancelRequestDto) {
+    public void saveCancelRequest (Integer requestId, String cancelReason) {
         CanceledMaterialRequest canceledMaterialRequest = new CanceledMaterialRequest();
 
-        canceledMaterialRequest.setRequestId(postCancelRequestDto.getRequestId());
-        canceledMaterialRequest.setCancelReason(postCancelRequestDto.getCancelReason());
+        canceledMaterialRequest.setRequestId(requestId);
+        canceledMaterialRequest.setCancelReason(cancelReason);
 
         canceledMaterialRequestRepository.save(canceledMaterialRequest);
 
-
-        return canceledMaterialRequest.getCancelId();
     }
 
     @Override
-    public Integer saveCompleteRequest (PostCompleteRequestDto postCompleteRequestDto) {
+    public void saveCompleteRequest (Integer requestId, Integer points) {
         CompletedMaterialRequest completedMaterialRequest = new CompletedMaterialRequest();
 
-        completedMaterialRequest.setRequestId(postCompleteRequestDto.getRequestId());
-        completedMaterialRequest.setPoints(postCompleteRequestDto.getPoints());
+        completedMaterialRequest.setRequestId(requestId);
+        completedMaterialRequest.setPoints(points);
 
         completedMaterialRequestRepository.save(completedMaterialRequest);
-
-        return completedMaterialRequest.getCompleteId();
     }
 
     @Override
-    public Integer updateApproveRequest (PostApproveRequestDto postApproveRequestDto) {
-        ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByRequestId(postApproveRequestDto.getRequestId());
+    public void updateRequest (PostRequestDto postRequestDto) {
+        if ("approved".equals(postRequestDto.getCollectionState())) {
+            updateApproveRequest(postRequestDto.getRequestId(), postRequestDto.getExpectedDate(), postRequestDto.getExpectedTime());
+        }
+        else if ("completed".equals(postRequestDto.getCollectionState())) {
+            updateCompleteRequest(postRequestDto.getRequestId(), postRequestDto.getPoints());
+        }
+        else if ("canceled".equals(postRequestDto.getCollectionState())) {
+            updateCancelRequest(postRequestDto.getRequestId(), postRequestDto.getCancelReason());
+        }
+    }
 
-        approvedMaterialRequest.setExpectedDate(postApproveRequestDto.getExpectedDate());
-        approvedMaterialRequest.setExpectedTime(postApproveRequestDto.getExpectedTime());
+    @Override
+    public void updateApproveRequest (Integer requestId, String ExpectedDate, String ExpectedTime) {
+        ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByRequestId(requestId);
+
+        approvedMaterialRequest.setExpectedDate(ExpectedDate);
+        approvedMaterialRequest.setExpectedTime(ExpectedTime);
 
         approvedMaterialRequestRepository.save(approvedMaterialRequest);
-
-        return approvedMaterialRequest.getApproveId();
     }
 
     @Override
-    public Integer updateCancelRequest (PostCancelRequestDto postCancelRequestDto) {
-        CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByRequestId(postCancelRequestDto.getRequestId());
+    public void updateCancelRequest (Integer requestId, String cancelReason) {
+        CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByRequestId(requestId);
 
-        canceledMaterialRequest.setCancelReason(postCancelRequestDto.getCancelReason());
+        canceledMaterialRequest.setCancelReason(cancelReason);
 
         canceledMaterialRequestRepository.save(canceledMaterialRequest);
 
-        ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByRequestId(postCancelRequestDto.getRequestId());
+        ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByRequestId(requestId);
         if (approvedMaterialRequest != null)
-            deleteApproveRequest(approvedMaterialRequest.getRequestId());
+            deleteApproveRequest(approvedMaterialRequest.getApproveId());
 
-        CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByRequestId(postCancelRequestDto.getRequestId());
-        if (completedMaterialRequest != null)
-            deleteCompleteRequest(completedMaterialRequest.getRequestId());
-
-        return canceledMaterialRequest.getCancelId();
     }
 
     @Override
-    public Integer updateCompleteRequest (PostCompleteRequestDto postCompleteRequestDto) {
-        CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByRequestId(postCompleteRequestDto.getRequestId());
+    public void updateCompleteRequest (Integer requestId, Integer points) {
+        CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByRequestId(requestId);
 
-        completedMaterialRequest.setPoints(postCompleteRequestDto.getPoints());
+        completedMaterialRequest.setPoints(points);
 
         completedMaterialRequestRepository.save(completedMaterialRequest);
-
-        return completedMaterialRequest.getCompleteId();
     }
 
     @Override
-    public void deleteApproveRequest (Integer requestId) {
-        ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByRequestId(requestId);
+    public void deleteApproveRequest (Integer approveId) {
+        ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findById(approveId).orElse(null);
 
         approvedMaterialRequestRepository.delete(approvedMaterialRequest);
     }
 
-    @Override
-    public void deleteCompleteRequest (Integer requestId) {
-        CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByRequestId(requestId);
-
-        completedMaterialRequestRepository.delete(completedMaterialRequest);
-    }
 
 }

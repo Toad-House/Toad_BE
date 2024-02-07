@@ -35,45 +35,18 @@ public class MaterialCompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(requestGetCompanyDto);
     }
 
-    @Operation(summary = "재료 제공 요청 승인")
-    @PostMapping("/request/approve")
-    public ResponseEntity<Integer> saveApproveRequest (@RequestBody PostApproveRequestDto postApproveRequestDto) {
-        Integer approveId = materialCompanyService.saveApproveRequest(postApproveRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(approveId);
+    @Operation(summary = "재료 제공 상태 변경", description = "승인 상태로 변경 시, 'collectionArea' = 'approved'" + "완료 상태로 변경 시, 'collectionArea' = 'completed'" + "취소 상태로 변경 시, 'collectionArea' = 'canceled'")
+    @PostMapping("/request")
+    public ResponseEntity<Void> saveRequest (@RequestBody PostRequestDto postRequestDto) {
+        materialCompanyService.saveRequest(postRequestDto);
+        return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "재료 재공 요청 취소")
-    @PostMapping("/request/cancel")
-    public ResponseEntity<Integer> saveCancelRequest (@RequestBody PostCancelRequestDto postCancelRequestDto) {
-        Integer cancelId = materialCompanyService.saveCancelRequest(postCancelRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(cancelId);
+    @Operation(summary = "재료 제공 요청 승인 내용 수정", description = "승인 상태에서 수정 시, 'collectionArea' = 'approved'" + "완료 상태에서 수정 시, 'collectionArea' = 'completed'" + "취소 상태에서 수정 시, 'collectionArea' = 'canceled'")
+    @PatchMapping("/request")
+    public ResponseEntity<Void> updateApproveRequest (@RequestBody PostRequestDto postRequestDto) {
+        materialCompanyService.updateRequest(postRequestDto);
+        return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "재료 제공 요청 완료")
-    @PostMapping("/request/complete")
-    public ResponseEntity<Integer> saveCompleteRequest (@RequestBody PostCompleteRequestDto postCompleteRequestDto) {
-        Integer completeId = materialCompanyService.saveCompleteRequest(postCompleteRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(completeId);
-    }
-
-    @Operation(summary = "재료 제공 요청 승인 내용 수정")
-    @PatchMapping("/request/approve")
-    public ResponseEntity<Integer> updateApproveRequest (@RequestBody PostApproveRequestDto postApproveRequestDto) {
-        Integer approveId = materialCompanyService.updateApproveRequest(postApproveRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(approveId);
-    }
-
-    @Operation(summary = "재료 제공 요청 취소 내용 수정")
-    @PatchMapping("/request/cancel")
-    public ResponseEntity<Integer> updateCancelRequest (@RequestBody PostCancelRequestDto postCancelRequestDto) {
-        Integer cancelId = materialCompanyService.updateCancelRequest(postCancelRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(cancelId);
-    }
-
-    @Operation(summary = "재료 제공 요청 완료 내용 수정")
-    @PatchMapping("/request/complete")
-    public ResponseEntity<Integer> updateCompleteRequest (@RequestBody PostCompleteRequestDto postCompleteRequestDto) {
-        Integer completeId = materialCompanyService.updateCompleteRequest(postCompleteRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(completeId);
-    }
 }

@@ -23,4 +23,7 @@ public class Company extends BaseTimeEntity {
 
     @Builder.Default
     private int companyPoint = 0;
+
+    @Column(nullable = false)
+    private String companyContact;
 }

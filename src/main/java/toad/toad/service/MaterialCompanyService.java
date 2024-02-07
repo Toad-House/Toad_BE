@@ -10,19 +10,22 @@ public interface MaterialCompanyService {
 
     RequestGetCompanyDto getOneRequest (Integer requestId);
 
-    Integer saveApproveRequest (PostApproveRequestDto postApproveRequestDto);
+    void saveRequest (PostRequestDto postRequestDto);
 
-    Integer saveCancelRequest (PostCancelRequestDto postCancelRequestDto);
+    void saveApproveRequest (Integer requestId, String ExpectedDate, String ExpectedTime);
 
-    Integer saveCompleteRequest (PostCompleteRequestDto postCompleteRequestDto);
+    void saveCompleteRequest (Integer requestId, Integer points);
 
-    Integer updateApproveRequest (PostApproveRequestDto postApproveRequestDto);
+    void saveCancelRequest (Integer requestId, String cancelReason);
 
-    Integer updateCancelRequest (PostCancelRequestDto postCancelRequestDto);
+    void updateRequest (PostRequestDto postRequestDto);
 
-    Integer updateCompleteRequest (PostCompleteRequestDto postCompleteRequestDto);
+    void updateApproveRequest (Integer requestId, String ExpectedDate, String ExpectedTime);
+
+    void updateCancelRequest (Integer requestId, String cancelReason);
+
+    void updateCompleteRequest (Integer requestId, Integer points);
 
     void deleteApproveRequest (Integer requestId);
 
-    void deleteCompleteRequest (Integer requestId);
 }

@@ -10,4 +10,6 @@ import java.util.List;
 public interface MaterialRequestRepository extends JpaRepository<MaterialRequest, Integer> {
 
     List<MaterialRequest> findAllByMaterialId(Integer materialId);
+
+    List<MaterialRequest> findAllByUserId(Integer userId);
 }
