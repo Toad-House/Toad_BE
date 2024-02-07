@@ -117,14 +117,18 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
 
     @Override
     public void saveRequest (PostRequestDto postRequestDto) {
-        if ("approved".equals(postRequestDto.getCollectionState())) {
-            saveApproveRequest(postRequestDto.getRequestId(), postRequestDto.getExpectedDate(), postRequestDto.getExpectedTime());
-        }
-        else if ("completed".equals(postRequestDto.getCollectionState())) {
-            saveCompleteRequest(postRequestDto.getRequestId(), postRequestDto.getPoints());
-        }
-        else if ("canceled".equals(postRequestDto.getCollectionState())) {
-            saveCancelRequest(postRequestDto.getRequestId(), postRequestDto.getCancelReason());
+        MaterialRequest materialRequest = materialRequestRepository.findById(postRequestDto.getRequestId()).orElse(null);
+        if (materialRequest != null) {
+            materialRequest.setCollectionState(postRequestDto.getCollectionState());
+            materialRequestRepository.save(materialRequest);
+
+            if ("approved".equals(postRequestDto.getCollectionState())) {
+                saveApproveRequest(postRequestDto.getRequestId(), postRequestDto.getExpectedDate(), postRequestDto.getExpectedTime());
+            } else if ("completed".equals(postRequestDto.getCollectionState())) {
+                saveCompleteRequest(postRequestDto.getRequestId(), postRequestDto.getPoints());
+            } else if ("canceled".equals(postRequestDto.getCollectionState())) {
+                saveCancelRequest(postRequestDto.getRequestId(), postRequestDto.getCancelReason());
+            }
         }
 
     }
@@ -148,6 +152,9 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
 
         canceledMaterialRequestRepository.save(canceledMaterialRequest);
 
+        ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByRequestId(requestId);
+        if (approvedMaterialRequest != null)
+            deleteApproveRequest(approvedMaterialRequest.getApproveId());
     }
 
     @Override
@@ -191,9 +198,6 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
 
         canceledMaterialRequestRepository.save(canceledMaterialRequest);
 
-        ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByRequestId(requestId);
-        if (approvedMaterialRequest != null)
-            deleteApproveRequest(approvedMaterialRequest.getApproveId());
 
     }
 
@@ -209,7 +213,7 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
     @Override
     public void deleteApproveRequest (Integer approveId) {
         ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findById(approveId).orElse(null);
-
+        System.out.println("why" + approveId);
         approvedMaterialRequestRepository.delete(approvedMaterialRequest);
     }
 

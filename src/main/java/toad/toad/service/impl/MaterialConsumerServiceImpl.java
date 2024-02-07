@@ -115,7 +115,7 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
 
     @Override
     public void updateRequest(PatchConsumerRequestDto patchConsumerRequestDto) {
-        if ("applicated".equals(patchConsumerRequestDto.getCollectionState())) {
+        if ("applied".equals(patchConsumerRequestDto.getCollectionState())) {
             MaterialRequest materialRequest = materialRequestRepository.findById(patchConsumerRequestDto.getRequestId()).orElse(null);
             materialRequest.setQuantityOfMaterial(patchConsumerRequestDto.getQuantityOfMaterial());
             materialRequest.setCollectionArea(patchConsumerRequestDto.getCollectionArea());
