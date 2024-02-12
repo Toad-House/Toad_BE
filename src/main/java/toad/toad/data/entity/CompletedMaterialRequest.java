@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.coyote.Request;
 
 @NoArgsConstructor
 @Entity
@@ -14,9 +15,11 @@ public class CompletedMaterialRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer completeId;
 
-    @Column(nullable = false)
-    private Integer requestId;
+    @ManyToOne
+    @JoinColumn(name = "requestId", nullable = false)
+    private MaterialRequest materialRequest;
 
     @Column(nullable = false)
     private Integer points;
+
 }

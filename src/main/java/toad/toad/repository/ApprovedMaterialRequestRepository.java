@@ -6,5 +6,5 @@ import toad.toad.data.entity.ApprovedMaterialRequest;
 
 @Repository
 public interface ApprovedMaterialRequestRepository extends JpaRepository<ApprovedMaterialRequest, Integer> {
-    ApprovedMaterialRequest findByRequestId(Integer requestId);
+    ApprovedMaterialRequest findByMaterialRequestRequestId(Integer requestId);
 }

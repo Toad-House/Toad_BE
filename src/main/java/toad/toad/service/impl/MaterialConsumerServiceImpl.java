@@ -34,22 +34,22 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
 
     @Override
     public List<RequestConsumerDto> getAllRequests(Integer userId) {
-        List<MaterialRequest> materialRequests = materialRequestRepository.findAllByUserId(userId);
+        List<MaterialRequest> materialRequests = materialRequestRepository.findAllByUserUserId(userId);
         List<RequestConsumerDto> requestConsumerDtos = new ArrayList<>();
 
         if (materialRequests != null) {
             for (MaterialRequest materialRequest : materialRequests) {
                 RequestConsumerDto requestConsumerDto = new RequestConsumerDto();
-                Material material = materialRepository.findById(materialRequest.getMaterialId()).orElse(null);
+                Material material = materialRequest.getMaterial();
 
-                Company company = companyRepository.findById(material.getCompanyId()).orElse(null);
+                Company company = material.getCompany();
                 if (company != null) {
                     requestConsumerDto.setCompanyName(company.getCompanyName());
                     requestConsumerDto.setCompanyContact(company.getCompanyContact());
                 }
 
                 requestConsumerDto.setRequestId(materialRequest.getRequestId());
-                requestConsumerDto.setMaterialId(materialRequest.getMaterialId());
+                requestConsumerDto.setMaterialId(material.getMaterialId());
                 requestConsumerDto.setQuantityOfMaterial(materialRequest.getQuantityOfMaterial());
                 requestConsumerDto.setCollectionArea(materialRequest.getCollectionArea());
                 requestConsumerDto.setCollectionState(materialRequest.getCollectionState());
@@ -66,7 +66,7 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
 
         MaterialRequest materialRequest = materialRequestRepository.findById(requestId).orElse(null);
         if (materialRequest != null) {
-            Material material = materialRepository.findById(materialRequest.getMaterialId()).orElse(null);
+            Material material = materialRequest.getMaterial();
 
             if (material != null) {
 
@@ -82,7 +82,7 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
                     requestGetConsumerDto.setProductName(product.getProductName());
                 }
 
-                Company company = companyRepository.findById(material.getCompanyId()).orElse(null);
+                Company company = material.getCompany();
                 if (company != null) {
                     requestGetConsumerDto.setCompanyName(company.getCompanyName());
                     requestGetConsumerDto.setCompanyContact(company.getCompanyContact());
@@ -94,16 +94,20 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
             requestGetConsumerDto.setCollectionState(materialRequest.getCollectionState());
 
             if ("approved".equals(requestGetConsumerDto.getCollectionState())) {
-                ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByRequestId(requestId);
+                ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByMaterialRequestRequestId(requestId);
                 requestGetConsumerDto.setExpectedDate(approvedMaterialRequest.getExpectedDate());
                 requestGetConsumerDto.setExpectedTime(approvedMaterialRequest.getExpectedTime());
             }
             else if ("completed".equals(requestGetConsumerDto.getCollectionState())) {
-                CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByRequestId(requestId);
+                ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByMaterialRequestRequestId(requestId);
+                requestGetConsumerDto.setExpectedDate(approvedMaterialRequest.getExpectedDate());
+                requestGetConsumerDto.setExpectedTime(approvedMaterialRequest.getExpectedTime());
+
+                CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByMaterialRequestRequestId(requestId);
                 requestGetConsumerDto.setPoints(completedMaterialRequest.getPoints());
             }
             else if ("canceled".equals(requestGetConsumerDto.getCollectionState())) {
-                CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByRequestId(requestId);
+                CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByMaterialRequestRequestId(requestId);
                 requestGetConsumerDto.setCancelReason(canceledMaterialRequest.getCancelReason());
             }
         }
@@ -123,7 +127,7 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
             materialRequestRepository.save(materialRequest);
         }
         else if ("canceled".equals(patchConsumerRequestDto.getCollectionState())) {
-            CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByRequestId(patchConsumerRequestDto.getRequestId());
+            CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByMaterialRequestRequestId(patchConsumerRequestDto.getRequestId());
             canceledMaterialRequest.setCancelReason(patchConsumerRequestDto.getCancelReason());
 
             canceledMaterialRequestRepository.save(canceledMaterialRequest);
@@ -138,7 +142,7 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
         if (materialRequest != null) {
             materialRequest.setCollectionState("canceled");
 
-            canceledMaterialRequest.setRequestId(postConsumerRequestDto.getRequestId());
+            canceledMaterialRequest.setMaterialRequest(materialRequest);
             canceledMaterialRequest.setCancelReason(postConsumerRequestDto.getCancelReason());
 
             canceledMaterialRequestRepository.save(canceledMaterialRequest);

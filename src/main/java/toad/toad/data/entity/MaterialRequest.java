@@ -13,11 +13,13 @@ public class MaterialRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer requestId;
 
-    @Column(nullable = false)
-    private Integer materialId;
+    @ManyToOne
+    @JoinColumn(name = "materialId", nullable = false)
+    private Material material;
 
-    @Column(nullable = false)
-    private Integer userId;
+    @ManyToOne
+    @JoinColumn(name = "userId", nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private Integer quantityOfMaterial;

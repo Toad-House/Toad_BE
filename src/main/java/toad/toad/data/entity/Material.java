@@ -15,8 +15,9 @@ public class Material {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer materialId;
 
-    @Column(nullable = false)
-    private Integer companyId;
+    @ManyToOne
+    @JoinColumn(name = "companyId", nullable = false)
+    private Company company;  // FK
 
     @Column(nullable = false)
     private String materialName;

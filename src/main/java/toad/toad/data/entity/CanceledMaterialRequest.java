@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.coyote.Request;
 
 @NoArgsConstructor
 @Entity
@@ -14,9 +15,11 @@ public class CanceledMaterialRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cancelId;
 
-    @Column(nullable = false)
-    private Integer requestId;
+    @ManyToOne
+    @JoinColumn(name = "requestId", nullable = false)
+    private MaterialRequest materialRequest;
 
     @Column(nullable = false)
     private String cancelReason;
+
 }
