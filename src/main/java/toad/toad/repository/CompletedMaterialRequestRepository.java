@@ -6,5 +6,5 @@ import toad.toad.data.entity.CompletedMaterialRequest;
 
 @Repository
 public interface CompletedMaterialRequestRepository extends JpaRepository<CompletedMaterialRequest, Integer> {
-    CompletedMaterialRequest findByRequestId(Integer requestId);
+    CompletedMaterialRequest findByMaterialRequestRequestId(Integer requestId);
 }

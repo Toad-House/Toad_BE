@@ -1,5 +1,6 @@
 package toad.toad.service.impl;
 
+import org.apache.coyote.Request;
 import org.springframework.stereotype.Service;
 import toad.toad.data.dto.*;
 import toad.toad.data.entity.*;
@@ -30,12 +31,12 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
 
     @Override
     public List<RequestCompanyDto> getAllRequests(Integer companyId) {
-        List<Material> materials = materialRepository.findAllByCompanyId(companyId);
+        List<Material> materials = materialRepository.findAllByCompanyCompanyId(companyId);
         List<RequestCompanyDto> requestCompanyDtos = new ArrayList<>();
 
         for (Material material : materials) {
 
-            List<MaterialRequest> materialRequests = materialRequestRepository.findAllByMaterialId(material.getMaterialId());
+            List<MaterialRequest> materialRequests = materialRequestRepository.findAllByMaterialMaterialId(material.getMaterialId());
 
             for (MaterialRequest materialRequest : materialRequests) {
                 RequestCompanyDto requestCompanyDto = new RequestCompanyDto();
@@ -48,22 +49,22 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
                 requestCompanyDto.setCollectionArea(materialRequest.getCollectionArea());
                 requestCompanyDto.setCollectionState(materialRequest.getCollectionState());
 
-                User user = userRepository.findById(materialRequest.getUserId()).orElse(null);
+                User user = materialRequest.getUser();
 
                 requestCompanyDto.setUserName(user.getUserName());
                 requestCompanyDto.setUserContact(user.getUserContact());
 
                 if ("approved".equals(materialRequest.getCollectionState())) {
-                    ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByRequestId(requestCompanyDto.getRequestId());
+                    ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByMaterialRequestRequestId(requestCompanyDto.getRequestId());
                     requestCompanyDto.setExpectedDate(approvedMaterialRequest.getExpectedDate());
                     requestCompanyDto.setExpectedTime(approvedMaterialRequest.getExpectedTime());
                 }
                 else if ("completed".equals(materialRequest.getCollectionState())) {
-                    CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByRequestId(requestCompanyDto.getRequestId());
+                    CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByMaterialRequestRequestId(requestCompanyDto.getRequestId());
                     requestCompanyDto.setPoints(completedMaterialRequest.getPoints());
                 }
                 else if ("canceled".equals(materialRequest.getCollectionState())) {
-                    CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByRequestId(requestCompanyDto.getRequestId());
+                    CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByMaterialRequestRequestId(requestCompanyDto.getRequestId());
                     requestCompanyDto.setCancelReason(canceledMaterialRequest.getCancelReason());
                 }
 
@@ -79,8 +80,8 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
     public RequestGetCompanyDto getOneRequest (Integer requestId) {
         MaterialRequest materialRequest = materialRequestRepository.findById(requestId).orElse(null);
 
-        Material material = materialRepository.findById(materialRequest.getMaterialId()).orElse(null);
-        User user = userRepository.findById(materialRequest.getUserId()).orElse(null);
+        Material material = materialRequest.getMaterial();
+        User user = materialRequest.getUser();
 
         RequestGetCompanyDto requestGetCompanyDto = new RequestGetCompanyDto();
 
@@ -99,16 +100,20 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
         requestGetCompanyDto.setUserContact(user.getUserContact());
 
         if ("approved".equals(materialRequest.getCollectionState())) {
-            ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByRequestId(requestId);
+            ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByMaterialRequestRequestId(requestId);
             requestGetCompanyDto.setExpectedDate(approvedMaterialRequest.getExpectedDate());
             requestGetCompanyDto.setExpectedTime(approvedMaterialRequest.getExpectedTime());
         }
         else if ("completed".equals(materialRequest.getCollectionState())) {
-            CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByRequestId(requestId);
+            ApprovedMaterialRequest approvedMaterialReqeust = approvedMaterialRequestRepository.findByMaterialRequestRequestId(requestId);
+            requestGetCompanyDto.setExpectedDate(approvedMaterialReqeust.getExpectedDate());
+            requestGetCompanyDto.setExpectedTime(approvedMaterialReqeust.getExpectedTime());
+
+            CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByMaterialRequestRequestId(requestId);
             requestGetCompanyDto.setPoints(completedMaterialRequest.getPoints());
         }
         else if ("canceled".equals(materialRequest.getCollectionState())) {
-            CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByRequestId(requestId);
+            CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByMaterialRequestRequestId(requestId);
             requestGetCompanyDto.setCancelReason(canceledMaterialRequest.getCancelReason());
         }
 
@@ -135,8 +140,9 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
     @Override
     public void saveApproveRequest (Integer requestId, String ExpectedDate, String ExpectedTime) {
         ApprovedMaterialRequest approvedMaterialRequest = new ApprovedMaterialRequest();
+        MaterialRequest materialRequest = materialRequestRepository.findById(requestId).orElse(null);
 
-        approvedMaterialRequest.setRequestId(requestId);
+        approvedMaterialRequest.setMaterialRequest(materialRequest);
         approvedMaterialRequest.setExpectedDate(ExpectedDate);
         approvedMaterialRequest.setExpectedTime(ExpectedTime);
 
@@ -146,13 +152,14 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
     @Override
     public void saveCancelRequest (Integer requestId, String cancelReason) {
         CanceledMaterialRequest canceledMaterialRequest = new CanceledMaterialRequest();
+        MaterialRequest materialRequest = materialRequestRepository.findById(requestId).orElse(null);
 
-        canceledMaterialRequest.setRequestId(requestId);
+        canceledMaterialRequest.setMaterialRequest(materialRequest);
         canceledMaterialRequest.setCancelReason(cancelReason);
 
         canceledMaterialRequestRepository.save(canceledMaterialRequest);
 
-        ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByRequestId(requestId);
+        ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByMaterialRequestRequestId(requestId);
         if (approvedMaterialRequest != null)
             deleteApproveRequest(approvedMaterialRequest.getApproveId());
     }
@@ -160,8 +167,9 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
     @Override
     public void saveCompleteRequest (Integer requestId, Integer points) {
         CompletedMaterialRequest completedMaterialRequest = new CompletedMaterialRequest();
+        MaterialRequest materialRequest = materialRequestRepository.findById(requestId).orElse(null);
 
-        completedMaterialRequest.setRequestId(requestId);
+        completedMaterialRequest.setMaterialRequest(materialRequest);
         completedMaterialRequest.setPoints(points);
 
         completedMaterialRequestRepository.save(completedMaterialRequest);
@@ -182,7 +190,7 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
 
     @Override
     public void updateApproveRequest (Integer requestId, String ExpectedDate, String ExpectedTime) {
-        ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByRequestId(requestId);
+        ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByMaterialRequestRequestId(requestId);
 
         approvedMaterialRequest.setExpectedDate(ExpectedDate);
         approvedMaterialRequest.setExpectedTime(ExpectedTime);
@@ -192,7 +200,7 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
 
     @Override
     public void updateCancelRequest (Integer requestId, String cancelReason) {
-        CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByRequestId(requestId);
+        CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByMaterialRequestRequestId(requestId);
 
         canceledMaterialRequest.setCancelReason(cancelReason);
 
@@ -203,7 +211,7 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
 
     @Override
     public void updateCompleteRequest (Integer requestId, Integer points) {
-        CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByRequestId(requestId);
+        CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByMaterialRequestRequestId(requestId);
 
         completedMaterialRequest.setPoints(points);
 

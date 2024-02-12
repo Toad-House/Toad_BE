@@ -6,5 +6,5 @@ import toad.toad.data.entity.CanceledMaterialRequest;
 
 @Repository
 public interface CanceledMaterialRequestRepository extends JpaRepository<CanceledMaterialRequest, Integer> {
-    CanceledMaterialRequest findByRequestId(Integer requestId);
+    CanceledMaterialRequest findByMaterialRequestRequestId(Integer requestId);
 }

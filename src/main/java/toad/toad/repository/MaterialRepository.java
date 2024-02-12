@@ -10,5 +10,5 @@ import java.util.List;
 public interface MaterialRepository extends JpaRepository<Material, Integer> {
     List<Material> findAll();
     List<Material> findByMaterialNameContaining(String keyword);
-    List<Material> findAllByCompanyId(Integer companyId);
+    List<Material> findAllByCompanyCompanyId(Integer companyId);
 }
