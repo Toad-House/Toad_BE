@@ -3,7 +3,7 @@ package toad.toad.data.dto;
 import lombok.Data;
 
 @Data
-public class ProductRequestDto {
+public class ProductPostDto {
     private String productName;
     private double productPrice;
     private String productDesc;

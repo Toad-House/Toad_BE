@@ -1,23 +1,23 @@
 package toad.toad.service;
 
-import toad.toad.data.dto.ProductRequestDto;
-import toad.toad.data.dto.ProductResponseDetailDto;
-import toad.toad.data.dto.ProductResponseSimpleDto;
+import toad.toad.data.dto.ProductPostDto;
+import toad.toad.data.dto.ProductGetDetailDto;
+import toad.toad.data.dto.ProductGetSimpleDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
 
-    int saveProduct(ProductRequestDto productRequestDto) throws Exception;
+    int saveProduct(ProductPostDto productPostDto) throws Exception;
 
-    List<ProductResponseSimpleDto> getAllProducts();
+    List<ProductGetSimpleDto> getAllProducts();
 
-    List<ProductResponseSimpleDto> findProductsByKeywords(String keyword);
+    List<ProductGetSimpleDto> findProductsByKeywords(String keyword);
 
-    Optional<ProductResponseDetailDto> getProductDetail(int id);
+    Optional<ProductGetDetailDto> getProductDetail(int id);
 
-    int updateProduct(int productId, ProductRequestDto productRequestDto) throws Exception;
+    int updateProduct(int productId, ProductPostDto productPostDto) throws Exception;
 
     void deleteProduct(int productId);
 
