@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class OrderGetDto {
     private int orderId;
     private int userId;
-    private int userName;
+    private String userName;
     private int productId;
     private String productName;
     private double productPrice;
