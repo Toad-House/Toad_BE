@@ -25,7 +25,7 @@ public class Product extends BaseTimeEntity {
 
     private byte[] imageUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyId", nullable = false)
     private Company company;  // FK
 }
