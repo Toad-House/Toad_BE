@@ -2,10 +2,11 @@ package toad.toad.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import toad.toad.data.dto.ProductRequestDto;
 import toad.toad.data.entity.Company;
 import toad.toad.data.entity.Product;
-import toad.toad.data.dto.ProductDetailDto;
-import toad.toad.data.dto.ProductSimpleDto;
+import toad.toad.data.dto.ProductResponseDetailDto;
+import toad.toad.data.dto.ProductResponseSimpleDto;
 import toad.toad.repository.CompanyRepository;
 import toad.toad.repository.ProductRepository;
 import toad.toad.service.ProductService;
@@ -28,52 +29,52 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int saveProduct(ProductDetailDto productDetailDto) throws Exception {
+    public int saveProduct(ProductRequestDto productRequestDto) throws Exception {
 
-//        Company company = companyRepository.findById(productDetailDto.getCompanyId())
-//                                        .orElseThrow(() -> new Exception("company not found"));
+        Company company = companyRepository.findById(productRequestDto.getCompanyId())
+                                        .orElseThrow(() -> new Exception("company not found"));
 
-        Product newProduct = modelMapper.map(productDetailDto, Product.class);
-//        newProduct.setCompany(company);
+        Product newProduct = modelMapper.map(productRequestDto, Product.class);
+        newProduct.setCompany(company);
         productRepository.save(newProduct);
 
         return newProduct.getProductId();
     }
 
     @Override
-    public List<ProductSimpleDto> getAllProducts() {
+    public List<ProductResponseSimpleDto> getAllProducts() {
         return productRepository.findAll().stream()
-                .map(product -> modelMapper.map(product, ProductSimpleDto.class))
+                .map(product -> modelMapper.map(product, ProductResponseSimpleDto.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductSimpleDto> findProductsByKeywords(String keyword) {
+    public List<ProductResponseSimpleDto> findProductsByKeywords(String keyword) {
         List<Product> targetProducts = productRepository.findByProductNameContainingIgnoreCaseOrProductDescContainingIgnoreCase(keyword, keyword);
         return targetProducts.stream()
-                .map(product -> modelMapper.map(product, ProductSimpleDto.class))
+                .map(product -> modelMapper.map(product, ProductResponseSimpleDto.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<ProductDetailDto> getProductDetail(int id) {
+    public Optional<ProductResponseDetailDto> getProductDetail(int id) {
         Optional<Product> productOptional = productRepository.findById(id);
-        return productOptional.map(product -> modelMapper.map(product, ProductDetailDto.class));
+        return productOptional.map(product -> modelMapper.map(product, ProductResponseDetailDto.class));
     }
 
     @Override
-    public int updateProduct(int productId, ProductDetailDto productDetailDto) throws Exception {
+    public int updateProduct(int productId, ProductRequestDto productRequestDto) throws Exception {
         Optional<Product> productOptional = productRepository.findById(productId);
 
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
-            Company company = companyRepository.findById(productDetailDto.getCompanyId())
+            Company company = companyRepository.findById(productRequestDto.getCompanyId())
                                 .orElseThrow(() -> new Exception("Company not found"));
 
-            product.setProductName(productDetailDto.getProductName());
-            product.setProductPrice(productDetailDto.getProductPrice());
-            product.setProductDesc(productDetailDto.getProductDesc());
-            product.setImageUrl(productDetailDto.getImageUrls().getBytes());
+            product.setProductName(productRequestDto.getProductName());
+            product.setProductPrice(productRequestDto.getProductPrice());
+            product.setProductDesc(productRequestDto.getProductDesc());
+            product.setImageUrl(productRequestDto.getImageUrls().getBytes());
             product.setCompany(company);
 
             return productRepository.save(product).getProductId();
