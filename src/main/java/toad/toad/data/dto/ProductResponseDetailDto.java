@@ -1,15 +1,19 @@
 package toad.toad.data.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
-public class ProductSimpleDto {
+public class ProductResponseDetailDto {
     private int productId;
     private String productName;
     private double productPrice;
-    private String imageUrl;
+    private String productDesc;
+    private String imageUrls;
     private int companyId;
     private String companyName;
 }
