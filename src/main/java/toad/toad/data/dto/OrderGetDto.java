@@ -16,5 +16,6 @@ public class OrderGetDto {
     private int companyId;
     private String companyName;
     private int orderNum;
+    private double totalPay;
     private LocalDateTime createdTime;
 }

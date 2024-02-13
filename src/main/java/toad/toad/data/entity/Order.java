@@ -30,4 +30,12 @@ public class Order extends BaseTimeEntity {
     @Column(nullable = false)
     private int orderNum;
 
+    @Column(nullable = false)
+    private double totalPay;
+
+    // 총 지불 금액 계산
+    public void calculateTotalPay() {
+        this.totalPay = this.product.getProductPrice() * this.getOrderNum();
+    }
+
 }
