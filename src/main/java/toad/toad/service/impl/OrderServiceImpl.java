@@ -1,13 +1,13 @@
 package toad.toad.service.impl;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Service;
 import toad.toad.data.dto.OrderGetDto;
 import toad.toad.data.dto.OrderPostDto;
 import toad.toad.data.entity.Order;
 import toad.toad.data.entity.Product;
 import toad.toad.data.entity.User;
-import toad.toad.repository.CompanyRepository;
 import toad.toad.repository.OrderRepository;
 import toad.toad.repository.ProductRepository;
 import toad.toad.repository.UserRepository;
@@ -44,6 +44,7 @@ public class OrderServiceImpl implements OrderService {
                             .user(user)
                             .product(product)
                             .orderNum(orderPostDto.getOrderNum())
+                            .totalPay(product.getProductPrice() * orderPostDto.getOrderNum())
                             .build();
 
         Order savedOrder = orderRepository.save(newOrder);
@@ -54,8 +55,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderGetDto> getAllMyOrders(int userId) {
         List<Order> orders = orderRepository.findByUser_UserId(userId);
+        TypeMap<Order, OrderGetDto> typeMap = modelMapper.createTypeMap(Order.class, OrderGetDto.class)
+                .addMappings(mapper -> {
+                    mapper.map(src -> src.getProduct().getCompany().getCompanyId(), OrderGetDto::setCompanyId);
+                    mapper.map(src -> src.getProduct().getCompany().getCompanyName(), OrderGetDto::setCompanyName);
+                });
+
         return orders.stream()
-                .map(order -> modelMapper.map(order, OrderGetDto.class))
+                .map(typeMap::map)
                 .collect(Collectors.toList());
     }
 
