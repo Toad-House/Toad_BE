@@ -34,14 +34,14 @@ public class OrderController {
     // READ
     @Operation(summary = "나의 주문 리스트 조회하기", description = "자신이 주문했던 항목에 대한 리스트를 반환하는 api 입니다.")
     @GetMapping("/list")
-    public ResponseEntity<List<OrderGetDto>> getAllMyOrders( @RequestBody UserInfoDto userInfoDto) {
-        List<OrderGetDto> allMyOrders = orderService.getAllMyOrders(userInfoDto.getUserId());
+    public ResponseEntity<List<OrderGetDto>> getAllMyOrders( @RequestParam int userId) {
+        List<OrderGetDto> allMyOrders = orderService.getAllMyOrders(userId);
         return ResponseEntity.ok(allMyOrders);
     }
 
     @Operation(summary = "개별 주문 조회하기", description = "개별 주문 정보를 조회하는 api 입니다.")
     @GetMapping("/{orderId}")
-    public ResponseEntity<Optional<OrderGetDto>> getOneMyOrder(@PathVariable int orderId, @RequestBody UserInfoDto userInfoDto) {
+    public ResponseEntity<Optional<OrderGetDto>> getOneMyOrder(@PathVariable int orderId) {
         Optional<OrderGetDto> targetOrder = orderService.getOneOrder(orderId);
         return ResponseEntity.ok(targetOrder);
     }
