@@ -7,7 +7,6 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @Entity
-@Table(name = "material")
 @Getter
 @Setter
 public class Material {

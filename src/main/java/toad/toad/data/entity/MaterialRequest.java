@@ -5,7 +5,6 @@ import lombok.*;
 
 @NoArgsConstructor
 @Entity
-@Table(name = "materialRequest")
 @Getter
 @Setter
 public class MaterialRequest {

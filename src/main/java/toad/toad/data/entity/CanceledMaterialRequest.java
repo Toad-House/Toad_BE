@@ -7,7 +7,6 @@ import org.apache.coyote.Request;
 
 @NoArgsConstructor
 @Entity
-@Table(name = "canceledMaterialRequest")
 @Getter
 @Setter
 public class CanceledMaterialRequest {
