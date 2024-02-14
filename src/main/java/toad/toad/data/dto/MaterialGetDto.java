@@ -2,7 +2,6 @@ package toad.toad.data.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
@@ -16,4 +15,5 @@ public class MaterialGetDto {
     private Integer pointsPerWeight;
     private String restrictedArea;
     private String availableArea;
+    private String imageUrl;
 }

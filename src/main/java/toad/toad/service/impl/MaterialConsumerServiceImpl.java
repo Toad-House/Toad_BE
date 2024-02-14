@@ -1,5 +1,6 @@
 package toad.toad.service.impl;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import toad.toad.data.dto.PatchConsumerRequestDto;
 import toad.toad.data.dto.PostConsumerRequestDto;
@@ -21,6 +22,9 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
     private final ApprovedMaterialRequestRepository approvedMaterialRequestRepository;
     private final CompletedMaterialRequestRepository completedMaterialRequestRepository;
     private final CanceledMaterialRequestRepository canceledMaterialRequestRepository;
+
+    @Value("${spring.cloud.gcp.storage.bucket}")
+    private String bucketName;
 
     public MaterialConsumerServiceImpl(MaterialRequestRepository materialRequestRepository, CompanyRepository companyRepository, MaterialRepository materialRepository, ProductRepository productRepository, ApprovedMaterialRequestRepository approvedMaterialRequestRepository, CompletedMaterialRequestRepository completedMaterialRequestRepository, CanceledMaterialRequestRepository canceledMaterialRequestRepository) {
         this.materialRequestRepository = materialRequestRepository;
@@ -53,6 +57,7 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
                 requestConsumerDto.setQuantityOfMaterial(materialRequest.getQuantityOfMaterial());
                 requestConsumerDto.setCollectionArea(materialRequest.getCollectionArea());
                 requestConsumerDto.setCollectionState(materialRequest.getCollectionState());
+                requestConsumerDto.setImageUrl("https://storage.googleapis.com/" + bucketName + "/" + materialRequest.getImageUrl());
 
                 requestConsumerDtos.add(requestConsumerDto);
             }
@@ -76,6 +81,7 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
                 requestGetConsumerDto.setMinimumQuantity(material.getMinimumQuantity());
                 requestGetConsumerDto.setRestrictedArea(material.getRestrictedArea());
                 requestGetConsumerDto.setAvailableArea(material.getAvailableArea());
+                requestGetConsumerDto.setMaterialImageUrl("https://storage.googleapis.com/" + bucketName + "/" + material.getImageUrl());
 
                 Product product = productRepository.findById(material.getProductId()).orElse(null);
                 if (product != null) {
@@ -92,6 +98,7 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
             requestGetConsumerDto.setQuantityOfMaterial(materialRequest.getQuantityOfMaterial());
             requestGetConsumerDto.setCollectionArea(materialRequest.getCollectionArea());
             requestGetConsumerDto.setCollectionState(materialRequest.getCollectionState());
+            requestGetConsumerDto.setRequestImageUrl("https://storage.googleapis.com/" + bucketName + "/" + materialRequest.getImageUrl());
 
             if ("approved".equals(requestGetConsumerDto.getCollectionState())) {
                 ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByMaterialRequestRequestId(requestId);

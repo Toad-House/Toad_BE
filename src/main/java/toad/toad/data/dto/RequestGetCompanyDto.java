@@ -18,6 +18,7 @@ public class RequestGetCompanyDto {
     private Integer minimumQuantity;
     private String restrictedArea;
     private String availableArea;
+    private String materialImageUrl;
 
     private Integer quantityOfMaterial;
     private String collectionArea;
@@ -26,6 +27,7 @@ public class RequestGetCompanyDto {
     private String expectedTime;
     private Integer points;
     private String cancelReason;
+    private String requestImageUrl;
 
     private String userName;
     private String userContact;

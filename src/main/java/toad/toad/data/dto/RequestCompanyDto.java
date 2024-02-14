@@ -26,4 +26,5 @@ public class RequestCompanyDto {
     @NonNull
     private String userName;
     private String userContact;
+    private String imageUrl;
 }

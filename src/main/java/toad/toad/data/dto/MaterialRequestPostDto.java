@@ -3,6 +3,7 @@ package toad.toad.data.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.annotation.Native;
 
@@ -20,4 +21,6 @@ public class MaterialRequestPostDto {
 
     @NonNull
     private String collectionArea;
+
+    private MultipartFile multipartFile;
 }

@@ -28,4 +28,6 @@ public class RequestConsumerDto {
     @NonNull
     private String companyContact;
 
+    private String imageUrl;
+
 }

@@ -1,6 +1,7 @@
 package toad.toad.data.dto;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -25,5 +26,7 @@ public class MaterialPostDto {
 
     @NonNull
     private String availableArea;
+
+    private MultipartFile multipartFile;
 
 }

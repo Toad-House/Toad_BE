@@ -17,6 +17,7 @@ public class RequestGetConsumerDto {
     private Integer minimumQuantity;
     private String restrictedArea;
     private String availableArea;
+    private String materialImageUrl;
 
     private Integer quantityOfMaterial;
     private String collectionArea;
@@ -25,6 +26,7 @@ public class RequestGetConsumerDto {
     private String expectedTime;
     private Integer points;
     private String cancelReason;
+    private String requestImageUrl;
 
     private String companyName;
     private String companyContact;
