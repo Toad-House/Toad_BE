@@ -1,6 +1,6 @@
 package toad.toad.service.impl;
 
-import org.apache.coyote.Request;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import toad.toad.data.dto.*;
 import toad.toad.data.entity.*;
@@ -19,6 +19,9 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
     private final ApprovedMaterialRequestRepository approvedMaterialRequestRepository;
     private final CanceledMaterialRequestRepository canceledMaterialRequestRepository;
     private final CompletedMaterialRequestRepository completedMaterialRequestRepository;
+
+    @Value("${spring.cloud.gcp.storage.bucket}")
+    private String bucketName;
 
     public MaterialCompanyServiceImpl(MaterialRepository materialRepository, MaterialRequestRepository materialRequestRepository, UserRepository userRepository, ApprovedMaterialRequestRepository approvedMaterialRequestRepository, CanceledMaterialRequestRepository canceledMaterialRequestRepository, CompletedMaterialRequestRepository completedMaterialRequestRepository) {
         this.materialRepository = materialRepository;
@@ -68,6 +71,8 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
                     requestCompanyDto.setCancelReason(canceledMaterialRequest.getCancelReason());
                 }
 
+                requestCompanyDto.setImageUrl("https://storage.googleapis.com/" + bucketName + "/" + material.getImageUrl());
+
                 requestCompanyDtos.add(requestCompanyDto);
 
             }
@@ -92,9 +97,12 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
         requestGetCompanyDto.setMinimumQuantity(material.getMinimumQuantity());
         requestGetCompanyDto.setRestrictedArea(material.getRestrictedArea());
         requestGetCompanyDto.setAvailableArea(material.getAvailableArea());
+        requestGetCompanyDto.setMaterialImageUrl("https://storage.googleapis.com/" + bucketName + "/" + material.getImageUrl());
+
         requestGetCompanyDto.setQuantityOfMaterial(materialRequest.getQuantityOfMaterial());
         requestGetCompanyDto.setCollectionArea(materialRequest.getCollectionArea());
         requestGetCompanyDto.setCollectionState(materialRequest.getCollectionState());
+        requestGetCompanyDto.setRequestImageUrl("https://storage.googleapis.com/" + bucketName + "/" + materialRequest.getImageUrl());
 
         requestGetCompanyDto.setUserName(user.getUserName());
         requestGetCompanyDto.setUserContact(user.getUserContact());

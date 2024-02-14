@@ -12,7 +12,6 @@ import toad.toad.data.dto.MaterialRequestPostDto;
 import toad.toad.service.MaterialService;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/material")
@@ -26,7 +25,7 @@ public class MaterialController {
 
     @Operation(summary = "재료 등록", description = "minimum_quantity, expected_condition, restricted_area는 null이어도 됨.")
     @PostMapping
-    public ResponseEntity<Integer> createMaterial (@RequestBody MaterialPostDto materialPostDto) throws Exception {
+    public ResponseEntity<Integer> createMaterial (@ModelAttribute MaterialPostDto materialPostDto) throws Exception {
         Integer materialId = materialService.saveMaterial(materialPostDto);
         return ResponseEntity.status(HttpStatus.OK).body(materialId);
     }
@@ -54,7 +53,7 @@ public class MaterialController {
 
     @Operation(summary = "재료 요청 api", description = "유저가 회사에 재료 제공 요청을 할 때 사용하는 api입니다.")
     @PostMapping("/request")
-    public ResponseEntity<Integer> createMaterialRequest (@RequestBody MaterialRequestPostDto materialRequestPostDto) throws Exception {
+    public ResponseEntity<Integer> createMaterialRequest (@ModelAttribute MaterialRequestPostDto materialRequestPostDto) throws Exception {
         Integer requestId = materialService.saveMaterialRequest(materialRequestPostDto);
         return ResponseEntity.status(HttpStatus.OK).body(requestId);
     }

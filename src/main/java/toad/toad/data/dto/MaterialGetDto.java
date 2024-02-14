@@ -15,4 +15,5 @@ public class MaterialGetDto {
     private Integer pointsPerWeight;
     private String restrictedArea;
     private String availableArea;
+    private String imageUrl;
 }

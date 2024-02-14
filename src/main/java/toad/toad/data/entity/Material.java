@@ -36,4 +36,6 @@ public class Material {
     @Column(nullable = false)
     private String availableArea;
 
+    private String imageUrl;
+
 }
