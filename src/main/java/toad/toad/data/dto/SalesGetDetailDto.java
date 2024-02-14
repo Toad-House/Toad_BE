@@ -1,8 +1,13 @@
 package toad.toad.data.dto;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
-public class SalesDetailDto {
+@Data
+@NoArgsConstructor
+public class SalesGetDetailDto {
     private int companyId;
     private String companyName;
     private int orderId;

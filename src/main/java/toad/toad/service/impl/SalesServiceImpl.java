@@ -3,8 +3,8 @@ package toad.toad.service.impl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import toad.toad.data.dto.SalesDetailDto;
-import toad.toad.data.dto.SalesSimpleDto;
+import toad.toad.data.dto.SalesGetDetailDto;
+import toad.toad.data.dto.SalesGetSimpleDto;
 import toad.toad.data.entity.Order;
 import toad.toad.data.entity.Product;
 import toad.toad.repository.OrderRepository;
@@ -30,13 +30,13 @@ public class SalesServiceImpl implements SalesService {
     }
 
     @Override
-    public List<SalesSimpleDto> getAllSales(int companyId) {
+    public List<SalesGetSimpleDto> getAllSales(int companyId) {
         List<Product> productList = productRepository.findByCompany_CompanyId(companyId);
         return productList.stream()
                 .map(product -> {
                     int productId = product.getProductId();
                     int totalSalesQuantity = getTotalSalesQuantityByProductId(productId);
-                    SalesSimpleDto salesSimpleDto = modelMapper.map(product, SalesSimpleDto.class);
+                    SalesGetSimpleDto salesSimpleDto = modelMapper.map(product, SalesGetSimpleDto.class);
                     salesSimpleDto.setSalesQuantity(totalSalesQuantity);
                     return salesSimpleDto;
                 }).collect(Collectors.toList());
@@ -47,16 +47,16 @@ public class SalesServiceImpl implements SalesService {
     }
 
     @Override
-    public List<SalesDetailDto> getSalesByProductId(int productId) {
+    public List<SalesGetDetailDto> getSalesByProductId(int productId) {
         List<Order> orderList = orderRepository.findByProduct_ProductId(productId);
         return orderList.stream()
-                .map(order -> modelMapper.map(order, SalesDetailDto.class))
+                .map(order -> modelMapper.map(order, SalesGetDetailDto.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<SalesDetailDto> getOneSales(int orderId) {
+    public Optional<SalesGetDetailDto> getOneSales(int orderId) {
         return orderRepository.findById(orderId)
-                .map(order -> modelMapper.map(order, SalesDetailDto.class));
+                .map(order -> modelMapper.map(order, SalesGetDetailDto.class));
     }
 }

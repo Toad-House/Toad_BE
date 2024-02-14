@@ -1,16 +1,16 @@
 package toad.toad.service;
 
-import toad.toad.data.dto.SalesDetailDto;
-import toad.toad.data.dto.SalesSimpleDto;
+import toad.toad.data.dto.SalesGetDetailDto;
+import toad.toad.data.dto.SalesGetSimpleDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface SalesService {
 
-    List<SalesSimpleDto> getAllSales(int companyId);
+    List<SalesGetSimpleDto> getAllSales(int companyId);
 
-    List<SalesDetailDto> getSalesByProductId(int productId);
+    List<SalesGetDetailDto> getSalesByProductId(int productId);
 
-    Optional<SalesDetailDto> getOneSales(int orderId);
+    Optional<SalesGetDetailDto> getOneSales(int orderId);
 }

@@ -2,13 +2,10 @@ package toad.toad.data.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-public class SalesSimpleDto {
+public class SalesGetSimpleDto {
     private int companyId;
     private String companyName;
     private int productId;
