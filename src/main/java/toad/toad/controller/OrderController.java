@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import toad.toad.data.dto.OrderGetDto;
 import toad.toad.data.dto.OrderPostDto;
-import toad.toad.data.dto.UserInfoDto;
 import toad.toad.service.OrderService;
 
 import java.util.List;
