@@ -55,11 +55,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderGetDto> getAllMyOrders(int userId) {
         List<Order> orders = orderRepository.findByUser_UserId(userId);
-        TypeMap<Order, OrderGetDto> typeMap = modelMapper.createTypeMap(Order.class, OrderGetDto.class)
-                .addMappings(mapper -> {
-                    mapper.map(src -> src.getProduct().getCompany().getCompanyId(), OrderGetDto::setCompanyId);
-                    mapper.map(src -> src.getProduct().getCompany().getCompanyName(), OrderGetDto::setCompanyName);
-                });
+        TypeMap<Order, OrderGetDto> typeMap = modelMapper.getTypeMap(Order.class, OrderGetDto.class);
+        if (typeMap == null) {
+            typeMap = modelMapper.createTypeMap(Order.class, OrderGetDto.class)
+                    .addMappings(mapper -> {
+                        mapper.map(src -> src.getProduct().getCompany().getCompanyId(), OrderGetDto::setCompanyId);
+                        mapper.map(src -> src.getProduct().getCompany().getCompanyName(), OrderGetDto::setCompanyName);
+                    });
+        }
 
         return orders.stream()
                 .map(typeMap::map)
