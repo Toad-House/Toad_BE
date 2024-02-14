@@ -3,13 +3,14 @@ package toad.toad.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import toad.toad.data.dto.CompanyJoinDto;
 import toad.toad.data.dto.UserJoinDto;
+import toad.toad.data.entity.Company;
+import toad.toad.data.entity.User;
 import toad.toad.service.AuthService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -32,6 +33,19 @@ public class AuthController {
         return ResponseEntity.ok(true);
     }
 
+    @Operation(summary = "사용자 목록 조회")
+    @GetMapping("/user")
+    public ResponseEntity<List<User>> findAllUsers() {
+        List<User> users = authService.findAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
+    @Operation(summary = "회사 목록 조회")
+    @GetMapping("/company")
+    public ResponseEntity<List<Company>> findAllCompanies() {
+        List<Company> companies = authService.findAllCompanies();
+        return ResponseEntity.ok(companies);
+    }
 
 
 }

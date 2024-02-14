@@ -9,6 +9,8 @@ import toad.toad.repository.CompanyRepository;
 import toad.toad.repository.UserRepository;
 import toad.toad.service.AuthService;
 
+import java.util.List;
+
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -40,6 +42,16 @@ public class AuthServiceImpl implements AuthService {
                                 .build();
         companyRepository.save(company);
         return new Exception("회사 회원가입 성공");
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public List<Company> findAllCompanies() {
+        return companyRepository.findAll();
     }
 
 }
