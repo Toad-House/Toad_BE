@@ -48,7 +48,7 @@ public class PointServiceImpl implements PointService {
     public void usePointsByUser(int orderId) {
         Optional<Order> orderOptional = orderRepository.findById(orderId);
         if (orderOptional.isPresent()) {
-            Order order = orderOptional.get()
+            Order order = orderOptional.get();
             User user = order.getUser();
             user.setUserPoint(user.getUserPoint() - order.getUsedPoints());
 
