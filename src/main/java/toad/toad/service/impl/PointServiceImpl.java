@@ -11,17 +11,17 @@ import java.util.Optional;
 public class PointServiceImpl implements PointService {
 
     private final CompanyRepository companyRepository;
-    private final UserRepository userRepository;
     private final CompanyPointUsageRepository companyPointUsageRepository;
     private final UserPointUsageRepository userPointUsageRepository;
     private final OrderRepository orderRepository;
+    private final MaterialRequestRepository materialRequestRepository;
 
-    public PointServiceImpl(CompanyRepository companyRepository, UserRepository userRepository, CompanyPointUsageRepository companyPointUsageRepository, UserPointUsageRepository userPointUsageRepository, OrderRepository orderRepository) {
+    public PointServiceImpl(CompanyRepository companyRepository, CompanyPointUsageRepository companyPointUsageRepository, UserPointUsageRepository userPointUsageRepository, OrderRepository orderRepository, MaterialRequestRepository materialRequestRepository) {
         this.companyRepository = companyRepository;
-        this.userRepository = userRepository;
         this.companyPointUsageRepository = companyPointUsageRepository;
         this.userPointUsageRepository = userPointUsageRepository;
         this.orderRepository = orderRepository;
+        this.materialRequestRepository = materialRequestRepository;
     }
 
 
@@ -65,6 +65,35 @@ public class PointServiceImpl implements PointService {
 
     @Override
     public void pointFromCompanyToUserWhenMaterialTrading(int requestId, int points) {
+        Optional<MaterialRequest> materialRequestOptional = materialRequestRepository.findById(requestId);
 
+        if (materialRequestOptional.isPresent()) {
+            MaterialRequest materialRequest = materialRequestOptional.get();
+            User user = materialRequest.getUser();
+            Company company = materialRequest.getMaterial().getCompany();
+
+            // company & user 포인트 조정
+            company.setCompanyPoint(company.getCompanyPoint() - points);
+            user.setUserPoint(user.getUserPoint() + points);
+
+            // 포인트 변동 기록
+            CompanyPointUsage companyPointUsage = CompanyPointUsage.builder()
+                    .company(company)
+                    .chargeOrPay(true)  // true: pay, false: charge
+                    .user(user)
+                    .point(points)
+                    .build();
+
+            companyPointUsageRepository.save(companyPointUsage);
+
+            UserPointUsage userPointUsage = UserPointUsage.builder()
+                    .user(user)
+                    .receiveOrUse(false)    // false: receive, true: use
+                    .company(company)
+                    .point(points)
+                    .build();
+
+            userPointUsageRepository.save(userPointUsage);
+        }
     }
 }

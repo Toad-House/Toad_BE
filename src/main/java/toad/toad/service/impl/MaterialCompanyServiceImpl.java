@@ -6,6 +6,7 @@ import toad.toad.data.dto.*;
 import toad.toad.data.entity.*;
 import toad.toad.repository.*;
 import toad.toad.service.MaterialCompanyService;
+import toad.toad.service.PointService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,21 +16,21 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
 
     private final MaterialRepository materialRepository;
     private final MaterialRequestRepository materialRequestRepository;
-    private final UserRepository userRepository;
     private final ApprovedMaterialRequestRepository approvedMaterialRequestRepository;
     private final CanceledMaterialRequestRepository canceledMaterialRequestRepository;
     private final CompletedMaterialRequestRepository completedMaterialRequestRepository;
+    private final PointService pointService;
 
     @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
 
-    public MaterialCompanyServiceImpl(MaterialRepository materialRepository, MaterialRequestRepository materialRequestRepository, UserRepository userRepository, ApprovedMaterialRequestRepository approvedMaterialRequestRepository, CanceledMaterialRequestRepository canceledMaterialRequestRepository, CompletedMaterialRequestRepository completedMaterialRequestRepository) {
+    public MaterialCompanyServiceImpl(MaterialRepository materialRepository, MaterialRequestRepository materialRequestRepository, ApprovedMaterialRequestRepository approvedMaterialRequestRepository, CanceledMaterialRequestRepository canceledMaterialRequestRepository, CompletedMaterialRequestRepository completedMaterialRequestRepository, PointService pointService) {
         this.materialRepository = materialRepository;
         this.materialRequestRepository = materialRequestRepository;
-        this.userRepository = userRepository;
         this.approvedMaterialRequestRepository = approvedMaterialRequestRepository;
         this.canceledMaterialRequestRepository = canceledMaterialRequestRepository;
         this.completedMaterialRequestRepository = completedMaterialRequestRepository;
+        this.pointService = pointService;
     }
 
     @Override
@@ -181,6 +182,8 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
         completedMaterialRequest.setPoints(points);
 
         completedMaterialRequestRepository.save(completedMaterialRequest);
+
+        pointService.pointFromCompanyToUserWhenMaterialTrading(requestId, points);
     }
 
     @Override
