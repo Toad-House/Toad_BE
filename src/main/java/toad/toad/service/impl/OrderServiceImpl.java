@@ -12,6 +12,7 @@ import toad.toad.repository.OrderRepository;
 import toad.toad.repository.ProductRepository;
 import toad.toad.repository.UserRepository;
 import toad.toad.service.OrderService;
+import toad.toad.service.PointService;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,12 +21,14 @@ import java.util.stream.Collectors;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    private final PointService pointService;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final ModelMapper modelMapper;
 
-    public OrderServiceImpl(UserRepository userRepository, ProductRepository productRepository, OrderRepository orderRepository, ModelMapper modelMapper) {
+    public OrderServiceImpl(PointService pointService, UserRepository userRepository, ProductRepository productRepository, OrderRepository orderRepository, ModelMapper modelMapper) {
+        this.pointService = pointService;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
@@ -44,10 +47,17 @@ public class OrderServiceImpl implements OrderService {
                             .user(user)
                             .product(product)
                             .orderNum(orderPostDto.getOrderNum())
-                            .totalPay(product.getProductPrice() * orderPostDto.getOrderNum())
+                            .payment(product.getProductPrice() * orderPostDto.getOrderNum())
+                            .usedPoints(orderPostDto.getUsedPoints())
+                            .finalPay(product.getProductPrice() * orderPostDto.getOrderNum() - orderPostDto.getUsedPoints())
                             .build();
 
         Order savedOrder = orderRepository.save(newOrder);
+
+        if (savedOrder.getUsedPoints() != 0) {
+                pointService.usePointsByUser(savedOrder.getOrderId());
+        }
+
         return savedOrder.getOrderId();
     }
 
