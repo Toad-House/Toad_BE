@@ -2,9 +2,6 @@ package toad.toad.data.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
 
 @Builder
 @NoArgsConstructor
@@ -31,11 +28,12 @@ public class Order extends BaseTimeEntity {
     private int orderNum;
 
     @Column(nullable = false)
-    private double totalPay;
+    private double payment;
 
-    // 총 지불 금액 계산
-    public void calculateTotalPay() {
-        this.totalPay = this.product.getProductPrice() * this.getOrderNum();
-    }
+    @Builder.Default
+    private int usedPoints = 0;
+
+    @Column(nullable = false)
+    private double finalPay;
 
 }

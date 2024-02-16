@@ -9,4 +9,5 @@ public class OrderPostDto {
     private int userId;
     private int productId;
     private int orderNum;
+    private int usedPoints;
 }
