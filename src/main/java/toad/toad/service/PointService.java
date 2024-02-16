@@ -1,8 +1,19 @@
 package toad.toad.service;
 
+import toad.toad.data.dto.CompanyChargePointDto;
+import toad.toad.data.dto.CompanyPointUsageDto;
+import toad.toad.data.dto.UserPointUsageDto;
+
+import java.util.List;
+
 public interface PointService {
+
+    List<UserPointUsageDto> getAllUserPointUsage(int userId);
+
+    List<CompanyPointUsageDto> getAllCompanyPointUsage(int companyId);
+
     // 회사 - 포인트 충전
-    void chargePointsToCompany(int companyId, int points);
+    void chargePointsToCompany(CompanyChargePointDto companyChargePointDto);
 
     // 사용자 - 상품 구매 시 포인트 사용
     void  usePointsByUser(int orderId);
