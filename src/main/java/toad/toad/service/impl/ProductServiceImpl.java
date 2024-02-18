@@ -75,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
 
         return targetProducts.stream()
                 .map(product -> {
-                    ProductGetSimpleDto simpleDto = new ProductGetSimpleDto();
+                    ProductGetSimpleDto simpleDto = modelMapper.map(product, ProductGetSimpleDto.class);
                     simpleDto.setImageUrl("https://storage.googleapis.com/" + bucketName + "/" + product.getImageUrl());
                     return simpleDto;
                 })
