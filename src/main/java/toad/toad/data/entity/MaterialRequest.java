@@ -29,4 +29,6 @@ public class MaterialRequest {
 
     @Column(nullable = false)
     private String collectionState;
+
+    private String imageUrl;
 }
