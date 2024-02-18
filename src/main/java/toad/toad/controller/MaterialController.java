@@ -26,6 +26,7 @@ public class MaterialController {
     @Operation(summary = "재료 등록", description = "minimum_quantity, expected_condition, restricted_area는 null이어도 됨.")
     @PostMapping
     public ResponseEntity<Integer> createMaterial (@ModelAttribute MaterialPostDto materialPostDto) throws Exception {
+        System.out.println(materialPostDto);
         Integer materialId = materialService.saveMaterial(materialPostDto);
         return ResponseEntity.status(HttpStatus.OK).body(materialId);
     }

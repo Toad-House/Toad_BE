@@ -27,6 +27,7 @@ public class ProductController {
     @Operation(summary = "새 상품 등록", description = "새로운 상품을 추가하는 api 입니다.")
     @PostMapping("/new")
     public ResponseEntity<String> createProduct(@ModelAttribute ProductPostDto productPostDto) throws Exception {
+        System.out.println(productPostDto);
         int productId = productService.saveProduct(productPostDto);
         return ResponseEntity.ok("상품 등록 성공 (productId: " + productId + ")");
     }
