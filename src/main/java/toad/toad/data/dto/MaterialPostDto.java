@@ -7,20 +7,20 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class MaterialPostDto {
     @NonNull
-    private Integer companyId;
+    private String companyId;
 
     @NonNull
     private String materialName;
 
-    private Integer minimumQuantity;
+    private String minimumQuantity;
 
     private String expectedCondition;
 
     @NonNull
-    private Integer productId;
+    private String productId;
 
     @NonNull
-    private Integer pointsPerWeight;
+    private String pointsPerWeight;
 
     private String restrictedArea;
 

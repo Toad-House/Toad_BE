@@ -40,10 +40,10 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public Integer saveMaterial(MaterialPostDto materialPostDto) throws Exception {
         Material material = new Material();
-        Company company = companyRepository.findById(materialPostDto.getCompanyId())
+        Company company = companyRepository.findById(Integer.parseInt(materialPostDto.getCompanyId()))
                 .orElseThrow(() -> new Exception("Invalid company id: " + materialPostDto.getCompanyId()));
 
-        Product product = productRepository.findById(materialPostDto.getProductId())
+        Product product = productRepository.findById(Integer.parseInt(materialPostDto.getProductId()))
                 .orElseThrow(() -> new Exception("Invalid product id: " + materialPostDto.getProductId()));
         // 유효한 Company 인지 확인
         // 유효한 product 인지 확인
@@ -51,9 +51,9 @@ public class MaterialServiceImpl implements MaterialService {
         material.setCompany(company);
         material.setMaterialName(materialPostDto.getMaterialName());
         material.setExpectedCondition(materialPostDto.getExpectedCondition());
-        material.setMinimumQuantity(materialPostDto.getMinimumQuantity());
+        material.setMinimumQuantity(Integer.parseInt(materialPostDto.getMinimumQuantity()));
         material.setProduct(product);
-        material.setPointsPerWeight(materialPostDto.getPointsPerWeight());
+        material.setPointsPerWeight(Integer.parseInt(materialPostDto.getPointsPerWeight()));
         material.setRestrictedArea(materialPostDto.getRestrictedArea());
         material.setAvailableArea(materialPostDto.getAvailableArea());
 
@@ -142,12 +142,12 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public Integer saveMaterialRequest(MaterialRequestPostDto materialRequestPostDto) throws Exception {
         MaterialRequest materialRequest = new MaterialRequest();
-        Material material = materialRepository.findById(materialRequestPostDto.getMaterialId()).orElse(null);
-        User user = userRepository.findById(materialRequestPostDto.getUserId()).orElse(null);
+        Material material = materialRepository.findById(Integer.parseInt(materialRequestPostDto.getMaterialId())).orElse(null);
+        User user = userRepository.findById(Integer.parseInt(materialRequestPostDto.getUserId())).orElse(null);
 
         materialRequest.setMaterial(material);
         materialRequest.setUser(user);
-        materialRequest.setQuantityOfMaterial(materialRequestPostDto.getQuantityOfMaterial());
+        materialRequest.setQuantityOfMaterial(Integer.parseInt(materialRequestPostDto.getQuantityOfMaterial()));
         materialRequest.setCollectionArea(materialRequestPostDto.getCollectionArea());
         materialRequest.setCollectionState("applied");
         if (!materialRequestPostDto.getMultipartFile().isEmpty()) {

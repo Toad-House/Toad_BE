@@ -9,13 +9,13 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class MaterialRequestPostDto {
     @NonNull
-    private Integer materialId;
+    private String materialId;
 
     @NonNull
-    private Integer userId;
+    private String userId;
 
     @NonNull
-    private Integer quantityOfMaterial;
+    private String quantityOfMaterial;
 
     @NonNull
     private String collectionArea;

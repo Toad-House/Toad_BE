@@ -38,12 +38,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public int saveProduct(ProductPostDto productPostDto) throws Exception {
 
-        Company company = companyRepository.findById(productPostDto.getCompanyId())
+        Company company = companyRepository.findById(Integer.parseInt(productPostDto.getCompanyId()))
                                         .orElseThrow(() -> new Exception("company not found"));
 
         Product newProduct = new Product();
         newProduct.setProductName(productPostDto.getProductName());
-        newProduct.setProductPrice(productPostDto.getProductPrice());
+        newProduct.setProductPrice(Double.parseDouble(productPostDto.getProductPrice()));
         newProduct.setProductDesc(productPostDto.getProductDesc());
         newProduct.setCompany(company);
 
