@@ -93,7 +93,7 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
 
         requestGetCompanyDto.setMaterialId(material.getMaterialId());
         requestGetCompanyDto.setMaterialName(material.getMaterialName());
-        requestGetCompanyDto.setProductId(material.getProductId());
+        requestGetCompanyDto.setProductId(material.getProduct().getProductId());
         requestGetCompanyDto.setPointsPerWeight(material.getPointsPerWeight());
         requestGetCompanyDto.setMinimumQuantity(material.getMinimumQuantity());
         requestGetCompanyDto.setRestrictedArea(material.getRestrictedArea());

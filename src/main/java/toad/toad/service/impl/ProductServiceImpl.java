@@ -1,6 +1,8 @@
 package toad.toad.service.impl;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import toad.toad.data.dto.ProductPostDto;
 import toad.toad.data.entity.Company;
@@ -21,6 +23,11 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CompanyRepository companyRepository;
     private final ModelMapper modelMapper;
+    @Autowired
+    private ImageServiceImpl imageService;
+
+    @Value("${spring.cloud.gcp.storage.bucket}")
+    private String bucketName;
 
     public ProductServiceImpl(ProductRepository productRepository, CompanyRepository companyRepository, ModelMapper modelMapper) {
         this.productRepository = productRepository;
@@ -34,8 +41,17 @@ public class ProductServiceImpl implements ProductService {
         Company company = companyRepository.findById(productPostDto.getCompanyId())
                                         .orElseThrow(() -> new Exception("company not found"));
 
-        Product newProduct = modelMapper.map(productPostDto, Product.class);
+        Product newProduct = new Product();
+        newProduct.setProductName(productPostDto.getProductName());
+        newProduct.setProductPrice(productPostDto.getProductPrice());
+        newProduct.setProductDesc(productPostDto.getProductDesc());
         newProduct.setCompany(company);
+
+        if (!productPostDto.getImage().isEmpty()) {
+            String imageUrl = imageService.imageHandler(productPostDto.getImage());
+            newProduct.setImageUrl(imageUrl);
+        }
+
         productRepository.save(newProduct);
 
         return newProduct.getProductId();
@@ -44,22 +60,36 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductGetSimpleDto> getAllProducts() {
         return productRepository.findAll().stream()
-                .map(product -> modelMapper.map(product, ProductGetSimpleDto.class))
+                .map(product -> {
+                    ProductGetSimpleDto simpleDto = modelMapper.map(product, ProductGetSimpleDto.class);
+                    simpleDto.setImageUrl("https://storage.googleapis.com/" + bucketName + "/" + product.getImageUrl());
+                    return simpleDto;
+                })
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ProductGetSimpleDto> findProductsByKeywords(String keyword) {
         List<Product> targetProducts = productRepository.findByProductNameContainingIgnoreCaseOrProductDescContainingIgnoreCase(keyword, keyword);
+
+
         return targetProducts.stream()
-                .map(product -> modelMapper.map(product, ProductGetSimpleDto.class))
+                .map(product -> {
+                    ProductGetSimpleDto simpleDto = new ProductGetSimpleDto();
+                    simpleDto.setImageUrl("https://storage.googleapis.com/" + bucketName + "/" + product.getImageUrl());
+                    return simpleDto;
+                })
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<ProductGetDetailDto> getProductDetail(int id) {
         Optional<Product> productOptional = productRepository.findById(id);
-        return productOptional.map(product -> modelMapper.map(product, ProductGetDetailDto.class));
+        return productOptional.map(product -> {
+            ProductGetDetailDto detailDto = modelMapper.map(product, ProductGetDetailDto.class);
+            detailDto.setImageUrl("https://storage.googleapis.com/" + bucketName + "/" + product.getImageUrl());
+            return detailDto;
+        });
     }
 
     @Override

@@ -23,7 +23,7 @@ public class Product extends BaseTimeEntity {
 
     private String productDesc;
 
-    private byte[] imageUrl;
+    private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyId", nullable = false)

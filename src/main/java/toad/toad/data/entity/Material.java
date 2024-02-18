@@ -14,7 +14,7 @@ public class Material {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer materialId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyId", nullable = false)
     private Company company;  // FK
 
@@ -25,8 +25,9 @@ public class Material {
 
     private String expectedCondition;
 
-    @Column(nullable = false)
-    private Integer productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "productId", nullable = false)
+    private Product product;  // FK
 
     @Column(nullable = false)
     private Integer pointsPerWeight;

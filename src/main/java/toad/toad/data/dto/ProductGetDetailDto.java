@@ -13,7 +13,7 @@ public class ProductGetDetailDto {
     private String productName;
     private double productPrice;
     private String productDesc;
-    private String imageUrls;
+    private String imageUrl;
     private int companyId;
     private String companyName;
 }

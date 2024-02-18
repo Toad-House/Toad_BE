@@ -83,7 +83,7 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
                 requestGetConsumerDto.setAvailableArea(material.getAvailableArea());
                 requestGetConsumerDto.setMaterialImageUrl("https://storage.googleapis.com/" + bucketName + "/" + material.getImageUrl());
 
-                Product product = productRepository.findById(material.getProductId()).orElse(null);
+                Product product = productRepository.findById(material.getProduct().getProductId()).orElse(null);
                 if (product != null) {
                     requestGetConsumerDto.setProductName(product.getProductName());
                 }

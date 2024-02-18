@@ -14,7 +14,7 @@ public class CompletedMaterialRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer completeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requestId", nullable = false)
     private MaterialRequest materialRequest;
 

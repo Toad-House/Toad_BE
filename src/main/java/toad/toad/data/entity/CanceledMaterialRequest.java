@@ -14,7 +14,7 @@ public class CanceledMaterialRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cancelId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requestId", nullable = false)
     private MaterialRequest materialRequest;
 
