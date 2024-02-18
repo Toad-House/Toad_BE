@@ -42,7 +42,7 @@ public class ProductController {
 
     @Operation(summary = "상품 검색", description = "키워드로 상품을 검색하는 api 입니다.")
     @GetMapping("/search")
-    public ResponseEntity<List<ProductGetSimpleDto>> searchProducts(@RequestParam String keyword) {
+    public ResponseEntity<List<ProductGetSimpleDto>> searchProducts(@RequestParam(name = "keyword") String keyword) {
         List<ProductGetSimpleDto> products = productService.findProductsByKeywords(keyword);
         return ResponseEntity.ok(products);
     }

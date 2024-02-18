@@ -72,7 +72,7 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
                     requestCompanyDto.setCancelReason(canceledMaterialRequest.getCancelReason());
                 }
 
-                requestCompanyDto.setImageUrl("https://storage.googleapis.com/" + bucketName + "/" + material.getImageUrl());
+                requestCompanyDto.setImageUrl("https://storage.googleapis.com/" + bucketName + "/" + materialRequest.getImageUrl());
 
                 requestCompanyDtos.add(requestCompanyDto);
 
