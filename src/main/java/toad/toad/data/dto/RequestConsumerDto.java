@@ -13,6 +13,7 @@ public class RequestConsumerDto {
     @NonNull
     private Integer materialId;
 
+    @NonNull String materialName;
     @NonNull
     private Integer quantityOfMaterial;
 

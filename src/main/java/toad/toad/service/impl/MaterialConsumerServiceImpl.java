@@ -54,6 +54,7 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
 
                 requestConsumerDto.setRequestId(materialRequest.getRequestId());
                 requestConsumerDto.setMaterialId(material.getMaterialId());
+                requestConsumerDto.setMaterialName(material.getMaterialName());
                 requestConsumerDto.setQuantityOfMaterial(materialRequest.getQuantityOfMaterial());
                 requestConsumerDto.setCollectionArea(materialRequest.getCollectionArea());
                 requestConsumerDto.setCollectionState(materialRequest.getCollectionState());
