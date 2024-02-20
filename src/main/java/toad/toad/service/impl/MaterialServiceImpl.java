@@ -22,18 +22,25 @@ public class MaterialServiceImpl implements MaterialService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
+    private final ApprovedMaterialRequestRepository approvedMaterialRequestRepository;
+    private final CompletedMaterialRequestRepository completedMaterialRequestRepository;
+    private final CanceledMaterialRequestRepository canceledMaterialRequestRepository;
+
     @Autowired
     private ImageServiceImpl imageService;
 
     @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
 
-    public MaterialServiceImpl(MaterialRepository materialRepository, MaterialRequestRepository materialRequestRepository, CompanyRepository companyRepository, UserRepository userRepository, ProductRepository productRepository, ImageServiceImpl imageService) {
+    public MaterialServiceImpl(MaterialRepository materialRepository, MaterialRequestRepository materialRequestRepository, CompanyRepository companyRepository, UserRepository userRepository, ProductRepository productRepository, ApprovedMaterialRequestRepository approvedMaterialRequestRepository, CompletedMaterialRequestRepository completedMaterialRequestRepository, CanceledMaterialRequestRepository canceledMaterialRequestRepository, ImageServiceImpl imageService) {
         this.materialRepository = materialRepository;
         this.materialRequestRepository = materialRequestRepository;
         this.companyRepository = companyRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
+        this.approvedMaterialRequestRepository = approvedMaterialRequestRepository;
+        this.completedMaterialRequestRepository = completedMaterialRequestRepository;
+        this.canceledMaterialRequestRepository = canceledMaterialRequestRepository;
         this.imageService = imageService;
     }
 
@@ -158,5 +165,41 @@ public class MaterialServiceImpl implements MaterialService {
         Integer requestId = materialRequestRepository.save(materialRequest).getRequestId();
 
         return requestId;
+    }
+
+
+    @Override
+    public void deleteMaterial(Integer id) throws Exception {
+        Material material = materialRepository.findById(id).orElseThrow(() -> new Exception());
+
+        List<MaterialRequest> materialRequests = materialRequestRepository.findAllByMaterialMaterialId(material.getMaterialId());
+
+        for (MaterialRequest materialRequest: materialRequests) {
+            deleteMaterialRequest(materialRequest.getRequestId());
+        }
+
+        materialRepository.delete(material);
+    }
+
+    @Override
+    public void deleteMaterialRequest(Integer id) throws Exception {
+        MaterialRequest materialRequest = materialRequestRepository.findById(id).orElseThrow(() -> new Exception());
+
+        List<ApprovedMaterialRequest> approvedMaterialRequests = approvedMaterialRequestRepository.findAllByMaterialRequestRequestId(materialRequest.getRequestId());
+        for (ApprovedMaterialRequest approvedMaterialRequest : approvedMaterialRequests) {
+            approvedMaterialRequestRepository.delete(approvedMaterialRequest);
+        }
+
+        List<CompletedMaterialRequest> completedMaterialRequests = completedMaterialRequestRepository.findAllByMaterialRequestRequestId(materialRequest.getRequestId());
+        for (CompletedMaterialRequest completedMaterialRequest : completedMaterialRequests) {
+            completedMaterialRequestRepository.delete(completedMaterialRequest);
+        }
+
+        List<CanceledMaterialRequest> canceledMaterialRequests = canceledMaterialRequestRepository.findAllByMaterialRequestRequestId(materialRequest.getRequestId());
+        for (CanceledMaterialRequest canceledMaterialRequest : canceledMaterialRequests) {
+            canceledMaterialRequestRepository.delete(canceledMaterialRequest);
+        }
+
+        materialRequestRepository.delete(materialRequest);
     }
 }

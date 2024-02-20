@@ -14,6 +14,10 @@ public class RequestConsumerDto {
     private Integer materialId;
 
     @NonNull String materialName;
+    private String expectedDate;
+    private String expectedTime;
+    private Integer points;
+    private String cancelReason;
     @NonNull
     private Integer quantityOfMaterial;
 

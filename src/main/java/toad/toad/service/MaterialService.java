@@ -16,4 +16,8 @@ public interface MaterialService {
     MaterialGetDto findByMaterialId (Integer id) throws Exception;
 
     Integer saveMaterialRequest(MaterialRequestPostDto materialRequestPostDto) throws Exception;
+
+    void deleteMaterial(Integer id) throws Exception;
+
+    void deleteMaterialRequest(Integer id) throws Exception;
 }

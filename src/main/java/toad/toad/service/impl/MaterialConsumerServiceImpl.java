@@ -58,6 +58,19 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
                 requestConsumerDto.setQuantityOfMaterial(materialRequest.getQuantityOfMaterial());
                 requestConsumerDto.setCollectionArea(materialRequest.getCollectionArea());
                 requestConsumerDto.setCollectionState(materialRequest.getCollectionState());
+                if ("approved".equals(materialRequest.getCollectionState())) {
+                    ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByMaterialRequestRequestId(requestConsumerDto.getRequestId());
+                    requestConsumerDto.setExpectedDate(approvedMaterialRequest.getExpectedDate());
+                    requestConsumerDto.setExpectedTime(approvedMaterialRequest.getExpectedTime());
+                }
+                else if ("completed".equals(materialRequest.getCollectionState())) {
+                    CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByMaterialRequestRequestId(requestConsumerDto.getRequestId());
+                    requestConsumerDto.setPoints(completedMaterialRequest.getPoints());
+                }
+                else if ("canceled".equals(materialRequest.getCollectionState())) {
+                    CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByMaterialRequestRequestId(requestConsumerDto.getRequestId());
+                    requestConsumerDto.setCancelReason(canceledMaterialRequest.getCancelReason());
+                }
                 requestConsumerDto.setImageUrl("https://storage.googleapis.com/" + bucketName + "/" + materialRequest.getImageUrl());
 
                 requestConsumerDtos.add(requestConsumerDto);

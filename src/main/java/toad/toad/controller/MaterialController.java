@@ -57,4 +57,18 @@ public class MaterialController {
         Integer requestId = materialService.saveMaterialRequest(materialRequestPostDto);
         return ResponseEntity.status(HttpStatus.OK).body(requestId);
     }
+
+    @Operation(summary = "재료 삭제")
+    @DeleteMapping("/{materialId}")
+    public ResponseEntity deleteMaterial (@PathVariable(name="materialId") Integer materialId) throws Exception {
+        materialService.deleteMaterial(materialId);
+        return ResponseEntity.status(HttpStatus.OK).body("delete complete");
+    }
+
+    @Operation(summary = "재료 요청 삭제")
+    @DeleteMapping("/request/{requestId}")
+    public ResponseEntity deleteMaterialRequest (@PathVariable(name="requestId") Integer requestId) throws Exception {
+        materialService.deleteMaterialRequest(requestId);
+        return ResponseEntity.status(HttpStatus.OK).body("delete complete");
+    }
 }
