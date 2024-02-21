@@ -11,9 +11,7 @@ import toad.toad.repository.*;
 import toad.toad.service.MaterialConsumerService;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class MaterialConsumerServiceImpl implements MaterialConsumerService {
@@ -41,12 +39,10 @@ public class MaterialConsumerServiceImpl implements MaterialConsumerService {
     @Override
     public List<RequestConsumerDto> getAllRequests(Integer userId) {
         List<MaterialRequest> materialRequests = materialRequestRepository.findAllByUserUserId(userId);
-        Set<MaterialRequest> uniqueMaterialRequests = new HashSet<>(materialRequests);
-
         List<RequestConsumerDto> requestConsumerDtos = new ArrayList<>();
 
-        if (uniqueMaterialRequests != null) {
-            for (MaterialRequest materialRequest : uniqueMaterialRequests) {
+        if (materialRequests != null) {
+            for (MaterialRequest materialRequest : materialRequests) {
                 RequestConsumerDto requestConsumerDto = new RequestConsumerDto();
                 Material material = materialRequest.getMaterial();
 

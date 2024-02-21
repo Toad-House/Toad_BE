@@ -9,9 +9,7 @@ import toad.toad.service.MaterialCompanyService;
 import toad.toad.service.PointService;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class MaterialCompanyServiceImpl implements MaterialCompanyService {
@@ -38,16 +36,14 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
     @Override
     public List<RequestCompanyDto> getAllRequests(Integer companyId) {
         List<Material> materials = materialRepository.findAllByCompanyCompanyId(companyId);
-        Set<Material> uniqueMaterials = new HashSet<>(materials);
         List<RequestCompanyDto> requestCompanyDtos = new ArrayList<>();
 
-        for (Material material : uniqueMaterials) {
+        for (Material material : materials) {
 
             List<MaterialRequest> materialRequests = materialRequestRepository.findAllByMaterialMaterialId(material.getMaterialId());
-            Set<MaterialRequest> uniqueMaterialRequests = new HashSet<>(materialRequests);
 
-            if (uniqueMaterialRequests != null) {
-                for (MaterialRequest materialRequest : uniqueMaterialRequests) {
+            if (materialRequests != null) {
+                for (MaterialRequest materialRequest : materialRequests) {
                     RequestCompanyDto requestCompanyDto = new RequestCompanyDto();
 
                     requestCompanyDto.setMaterialId(material.getMaterialId());
