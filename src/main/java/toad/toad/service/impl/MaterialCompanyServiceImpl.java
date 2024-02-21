@@ -9,7 +9,9 @@ import toad.toad.service.MaterialCompanyService;
 import toad.toad.service.PointService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class MaterialCompanyServiceImpl implements MaterialCompanyService {
@@ -36,48 +38,49 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
     @Override
     public List<RequestCompanyDto> getAllRequests(Integer companyId) {
         List<Material> materials = materialRepository.findAllByCompanyCompanyId(companyId);
+        Set<Material> uniqueMaterials = new HashSet<>(materials);
         List<RequestCompanyDto> requestCompanyDtos = new ArrayList<>();
 
-        for (Material material : materials) {
+        for (Material material : uniqueMaterials) {
 
             List<MaterialRequest> materialRequests = materialRequestRepository.findAllByMaterialMaterialId(material.getMaterialId());
+            Set<MaterialRequest> uniqueMaterialRequests = new HashSet<>(materialRequests);
 
-            for (MaterialRequest materialRequest : materialRequests) {
-                RequestCompanyDto requestCompanyDto = new RequestCompanyDto();
+            if (uniqueMaterialRequests != null) {
+                for (MaterialRequest materialRequest : uniqueMaterialRequests) {
+                    RequestCompanyDto requestCompanyDto = new RequestCompanyDto();
 
-                requestCompanyDto.setMaterialId(material.getMaterialId());
-                requestCompanyDto.setMaterialName(material.getMaterialName());
+                    requestCompanyDto.setMaterialId(material.getMaterialId());
+                    requestCompanyDto.setMaterialName(material.getMaterialName());
 
-                requestCompanyDto.setRequestId(materialRequest.getRequestId());
-                requestCompanyDto.setQuantityOfMaterial(materialRequest.getQuantityOfMaterial());
-                requestCompanyDto.setCollectionArea(materialRequest.getCollectionArea());
-                requestCompanyDto.setCollectionState(materialRequest.getCollectionState());
+                    requestCompanyDto.setRequestId(materialRequest.getRequestId());
+                    requestCompanyDto.setQuantityOfMaterial(materialRequest.getQuantityOfMaterial());
+                    requestCompanyDto.setCollectionArea(materialRequest.getCollectionArea());
+                    requestCompanyDto.setCollectionState(materialRequest.getCollectionState());
 
-                User user = materialRequest.getUser();
+                    User user = materialRequest.getUser();
 
-                requestCompanyDto.setUserName(user.getUserName());
-                requestCompanyDto.setUserContact(user.getUserContact());
+                    requestCompanyDto.setUserName(user.getUserName());
+                    requestCompanyDto.setUserContact(user.getUserContact());
 
-                if ("approved".equals(materialRequest.getCollectionState())) {
-                    ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByMaterialRequestRequestId(requestCompanyDto.getRequestId());
-                    requestCompanyDto.setExpectedDate(approvedMaterialRequest.getExpectedDate());
-                    requestCompanyDto.setExpectedTime(approvedMaterialRequest.getExpectedTime());
+                    if ("approved".equals(materialRequest.getCollectionState())) {
+                        ApprovedMaterialRequest approvedMaterialRequest = approvedMaterialRequestRepository.findByMaterialRequestRequestId(requestCompanyDto.getRequestId());
+                        requestCompanyDto.setExpectedDate(approvedMaterialRequest.getExpectedDate());
+                        requestCompanyDto.setExpectedTime(approvedMaterialRequest.getExpectedTime());
+                    } else if ("completed".equals(materialRequest.getCollectionState())) {
+                        CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByMaterialRequestRequestId(requestCompanyDto.getRequestId());
+                        requestCompanyDto.setPoints(completedMaterialRequest.getPoints());
+                    } else if ("canceled".equals(materialRequest.getCollectionState())) {
+                        CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByMaterialRequestRequestId(requestCompanyDto.getRequestId());
+                        requestCompanyDto.setCancelReason(canceledMaterialRequest.getCancelReason());
+                    }
+
+                    requestCompanyDto.setImageUrl("https://storage.googleapis.com/" + bucketName + "/" + materialRequest.getImageUrl());
+
+                    requestCompanyDtos.add(requestCompanyDto);
+
                 }
-                else if ("completed".equals(materialRequest.getCollectionState())) {
-                    CompletedMaterialRequest completedMaterialRequest = completedMaterialRequestRepository.findByMaterialRequestRequestId(requestCompanyDto.getRequestId());
-                    requestCompanyDto.setPoints(completedMaterialRequest.getPoints());
-                }
-                else if ("canceled".equals(materialRequest.getCollectionState())) {
-                    CanceledMaterialRequest canceledMaterialRequest = canceledMaterialRequestRepository.findByMaterialRequestRequestId(requestCompanyDto.getRequestId());
-                    requestCompanyDto.setCancelReason(canceledMaterialRequest.getCancelReason());
-                }
-
-                requestCompanyDto.setImageUrl("https://storage.googleapis.com/" + bucketName + "/" + materialRequest.getImageUrl());
-
-                requestCompanyDtos.add(requestCompanyDto);
-
             }
-
         }
         return requestCompanyDtos;
     }
