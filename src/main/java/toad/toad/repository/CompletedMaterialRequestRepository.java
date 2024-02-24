@@ -10,4 +10,6 @@ import java.util.List;
 public interface CompletedMaterialRequestRepository extends JpaRepository<CompletedMaterialRequest, Integer> {
     CompletedMaterialRequest findByMaterialRequestRequestId(Integer requestId);
     List<CompletedMaterialRequest> findAllByMaterialRequestRequestId(Integer requestId);
+    boolean existsByMaterialRequest_RequestId(int requestId);
+
 }

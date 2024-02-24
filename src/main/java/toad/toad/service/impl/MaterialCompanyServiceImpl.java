@@ -135,11 +135,11 @@ public class MaterialCompanyServiceImpl implements MaterialCompanyService {
             materialRequest.setCollectionState(postRequestDto.getCollectionState());
             materialRequestRepository.save(materialRequest);
 
-            if ("approved".equals(postRequestDto.getCollectionState())) {
+            if ("approved".equals(postRequestDto.getCollectionState()) && !approvedMaterialRequestRepository.existsByMaterialRequest_RequestId(postRequestDto.getRequestId())) {
                 saveApproveRequest(postRequestDto.getRequestId(), postRequestDto.getExpectedDate(), postRequestDto.getExpectedTime());
-            } else if ("completed".equals(postRequestDto.getCollectionState())) {
+            } else if ("completed".equals(postRequestDto.getCollectionState()) && !completedMaterialRequestRepository.existsByMaterialRequest_RequestId(postRequestDto.getRequestId()) && postRequestDto.getPoints() != 0) {
                 saveCompleteRequest(postRequestDto.getRequestId(), postRequestDto.getPoints());
-            } else if ("canceled".equals(postRequestDto.getCollectionState())) {
+            } else if ("canceled".equals(postRequestDto.getCollectionState()) && !canceledMaterialRequestRepository.existsByMaterialRequest_RequestId(postRequestDto.getRequestId())) {
                 saveCancelRequest(postRequestDto.getRequestId(), postRequestDto.getCancelReason());
             }
         }

@@ -42,6 +42,7 @@ public class PointServiceImpl implements PointService {
             userPointUsageDto.setUserName(user.getUserName());
             userPointUsageDto.setReceiveOrUse(userPointUsage.isReceiveOrUse());
             userPointUsageDto.setPoint(userPointUsage.getPoint());
+            userPointUsageDto.setTotalPoint(user.getUserPoint());
             if (!userPointUsage.isReceiveOrUse()) { // receive
                 Company company = userPointUsage.getCompany();
                 userPointUsageDto.setCompanyId(company.getCompanyId());
@@ -69,6 +70,7 @@ public class PointServiceImpl implements PointService {
             companyPointUsageDto.setCompanyName(company.getCompanyName());
             companyPointUsageDto.setChargeOrPay(companyPointUsage.isChargeOrPay());
             companyPointUsageDto.setPoint(companyPointUsage.getPoint());
+            companyPointUsageDto.setTotalPoint(company.getCompanyPoint());
             if (companyPointUsage.isChargeOrPay()) { // receive
                 User user = companyPointUsage.getUser();
                 companyPointUsageDto.setUserId(user.getUserId());

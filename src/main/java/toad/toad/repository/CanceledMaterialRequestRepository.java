@@ -10,4 +10,5 @@ import java.util.List;
 public interface CanceledMaterialRequestRepository extends JpaRepository<CanceledMaterialRequest, Integer> {
     CanceledMaterialRequest findByMaterialRequestRequestId(Integer requestId);
     List<CanceledMaterialRequest> findAllByMaterialRequestRequestId(Integer requestId);
+    boolean existsByMaterialRequest_RequestId(int requestId);
 }

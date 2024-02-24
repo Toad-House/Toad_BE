@@ -10,6 +10,7 @@ public class UserPointUsageDto {
     private String userName;
     private boolean receiveOrUse;  // receive: 0, use: 1
     private int point;
+    private int totalPoint;
 
     // receive (material trade)
     private int companyId;

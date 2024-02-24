@@ -14,4 +14,6 @@ public class CompanyPointUsageDto {
     // pay (material trade)
     private int userId;
     private String userName;
+
+    private int totalPoint;
 }
